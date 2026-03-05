@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    fetch("dorian_gray.xml") // file is now in /js
+    fetch("js/dorian_gray.xml") // fetch relative to index.html
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Failed to fetch dorian_gray.xml: ${response.status} ${response.statusText}`);
@@ -37,6 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => {
             console.error("Error loading XML:", error);
             document.getElementById("novel-text").innerHTML =
-                "<p>Failed to load the novel text. Make sure dorian_gray.xml is at the root of your repository.</p>";
+                "<p>Failed to load the novel text. Make sure dorian_gray.xml is in the js folder.</p>";
         });
 });
