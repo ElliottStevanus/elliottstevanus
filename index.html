@@ -1,167 +1,187 @@
+```html
 <!DOCTYPE html>
 <html lang="en"> 
 <head>
-    <meta charset="UTF-8">
-    <title>Interpret Dorian Gray | Literary Analysis</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Interpret Dorian Gray explores themes, symbolism, and analysis of Oscar Wilde's The Picture of Dorian Gray.">
-    <meta name="keywords" content="Dorian Gray, Oscar Wilde, literary analysis, symbolism, themes, interpretation">
-    <meta name="author" content="InterpretDorianGray.com"> <!-- Not actual title, I was having trouble with getting github to publish the page with this title-->
- 
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
+<meta charset="UTF-8">
+<title>Interpret Dorian Gray | Literary Analysis</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Interpret Dorian Gray explores themes, symbolism, and analysis of Oscar Wilde's The Picture of Dorian Gray.">
 
-        .figurative-highlight { 
-            background-color: #fff3a0;
-            border-bottom: 2px solid #5a2d82;
-            padding: 2px;
-        }
+<style>
 
-        header {
-            background-color: #5a2d82;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color:#f4f4f4;
+    color:#333;
+    margin:0;
+    padding:0;
+}
 
-        nav {
-            text-align: center;
-            background-color: #eeeeee;
-            padding: 10px;
-        }
+header{
+    background-color:#5a2d82;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
 
-        nav a {
-            margin: 0 15px;
-            color: #5a2d82;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        
-        nav a:hover {
-            text-decoration: underline;
-        }
+nav{
+    text-align:center;
+    background-color:#eeeeee;
+    padding:10px;
+}
 
-        .container {
-            max-width: 900px;
-            margin: 20px auto;
-            background: white;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
+nav a{
+    margin:0 15px;
+    color:#5a2d82;
+    text-decoration:none;
+    font-weight:bold;
+}
 
-        h1, h2 {
-            color: #5a2d82;
-        }
+nav a:hover{
+    text-decoration:underline;
+}
 
-        p {
-            line-height: 1.6em;
-        }
-        
-        img {
-            display: block;
-            margin: 20px auto;
-            max-width: 100%;
-            height: auto;
-            border: 5px solid #ddd;
-        }
+.container{
+    max-width:900px;
+    margin:20px auto;
+    background:white;
+    padding:20px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
 
-        ul {
-            background-color: #f0f0f0;
-            padding: 15px;
-        }
+h1,h2,h3{
+    color:#5a2d82;
+}
 
-        .highlight {
-            color: #990000;
-            font-weight: bold;
-        }
+p{
+    line-height:1.6em;
+}
 
-        .quote {
-            font-style: italic;
-            background-color: #fafafa;
-            border-left: 4px solid #5a2d82;
-            padding: 15px;
-            margin: 20px 0;
-        }
+img{
+    display:block;
+    margin:20px auto;
+    max-width:100%;
+    height:auto;
+    border:5px solid #ddd;
+}
 
-        footer {
-            text-align: center;
-            padding: 15px;
-            font-size: 0.8em;
-            background-color: #eeeeee;
-            margin-top: 20px;
-        }
+ul{
+    background-color:#f0f0f0;
+    padding:15px;
+}
 
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                padding: 15px;
-            }
-        }
-    </style>
+.highlight{
+    color:#990000;
+    font-weight:bold;
+}
+
+.quote{
+    font-style:italic;
+    background-color:#fafafa;
+    border-left:4px solid #5a2d82;
+    padding:15px;
+    margin:20px 0;
+}
+
+footer{
+    text-align:center;
+    padding:15px;
+    font-size:0.8em;
+    background-color:#eeeeee;
+    margin-top:20px;
+}
+
+@media(max-width:768px){
+.container{
+margin:10px;
+padding:15px;
+}
+}
+
+</style>
 </head>
 
 <body>
-    <header>
-        <h1>Interpret Dorian Gray</h1>
-        <p>Exploring Beauty, Morality, and Decadence</p>
-    </header>
-    
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="#themes">Themes</a>
-        <a href="#analysis">Analysis</a>
-        <a href="project.html">Project</a>
-        <a href="#about">About</a>
-    </nav>
-    
-    <div class="container">
-        <!-- This div will be populated with XML content by parser.js. I used JS instead of RelaxNg, as I could only think of how to use Regex to find simile, and Chatgpt told me Javascript was an engine that could run Regex on a UX-->
-        <div id="novel-text"></div>
 
-        <h2>Discourse about the Novel</h2>
-        <p>
-            <span class="highlight">The Picture of Dorian Gray</span> by Oscar Wilde
-            is commononly cited as an exploration of the consequences of vanity, aestheticism, and moral corruption.
-        </p>
-        
-        <img src="dorian_gray.jpg" alt="Portrait of Dorian Gray">
+<header>
+<h1>Interpret Dorian Gray</h1>
+<p>Exploring Beauty, Morality, and Decadence</p>
+</header>
 
-        <div class="quote">
-            "The only way to get rid of temptation is to yield to it."
-        </div>
+<nav>
+<a href="index.html">Home</a>
+<a href="text.html">Text</a>
+<a href="#themes">Themes</a>
+<a href="#analysis">Analysis</a>
+<a href="project.html">Project</a>
+<a href="#about">About</a>
+</nav>
 
-        <h2 id="themes">Commonly Stated Themes</h2>
-        <ul>
-            <li>Beauty and Youth</li>
-            <li>The Corruption of the Soul</li>
-            <li>The Influence of Lord Henry</li>
-            <li>Art vs. Reality</li>
-            <li>Morality and Consequence</li>
-        </ul>
+<div class="container">
 
-        <h2 id="analysis">Interpretation & Analysis</h2>
-        <p>
-            Much of novel blurs the line between reality and art, aestehtic and truth, thus it feels appropriate to try and understnad Wildes novel through his use of metaphor. What common images he is conjuring, and which lines he tends to blur.
-        </p>
+<h2>Dorian Gray's Metaphor Tracker</h2>
 
-        <h2 id="about">About This Website</h2>
-        <p>
-            This website hopes to cultivate thoughtful literary interpretation,
-            close reading, and thematic analysis of Wilde's novel.
-        </p>
-    </div>
-    
-    <footer>
-        &copy; 2026 InterpretDorianGray.com | All Rights Reserved
-    </footer>
+<img src="doriangray.jpg" alt="Dorian Gray Image">
 
-    <!-- Load parser.js to fetch XML and highlight figurative language -->
-    <script src="js/parser.js"></script>
+<h3>What is a metaphor tracker?</h3>
+<p>
+This project uses XML to create a website capable of detecting and analyzing metaphors and similes in 
+<em>The Picture of Dorian Gray</em> by Oscar Wilde. The goal is to compile figurative language results and 
+compare similarities between them — identifying recurring words, shared imagery, and patterns. This allows 
+for clearer visualization of Wilde’s image system and stylistic tendencies.
+</p>
+
+<h3>Navigation</h3>
+<p>
+Under Construction.
+</p>
+
+<hr>
+
+<h2>Discourse about the Novel</h2>
+
+<p>
+<span class="highlight">The Picture of Dorian Gray</span> by Oscar Wilde is commonly cited as an exploration 
+of the consequences of vanity, aestheticism, and moral corruption.
+</p>
+
+<img src="dorian_gray.jpg" alt="Portrait of Dorian Gray">
+
+<div class="quote">
+"The only way to get rid of temptation is to yield to it."
+</div>
+
+<h2 id="themes">Commonly Stated Themes</h2>
+
+<ul>
+<li>Beauty and Youth</li>
+<li>The Corruption of the Soul</li>
+<li>The Influence of Lord Henry</li>
+<li>Art vs. Reality</li>
+<li>Morality and Consequence</li>
+</ul>
+
+<h2 id="analysis">Interpretation & Analysis</h2>
+
+<p>
+Much of the novel blurs the line between reality and art, aesthetic and truth, thus it feels appropriate to 
+try and understand Wilde’s novel through his use of metaphor — what common images he is conjuring, and which 
+lines he tends to blur.
+</p>
+
+<h2 id="about">About This Website</h2>
+
+<p>
+This website hopes to cultivate thoughtful literary interpretation, close reading, and thematic analysis of 
+Wilde's novel.
+</p>
+
+</div>
+
+<footer>
+&copy; 2026 InterpretDorianGray.com
+</footer>
+
 </body>
 </html>
+```
