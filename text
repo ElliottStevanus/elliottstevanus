@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>Dorian Gray Text</title>
+
+<script src="js/script.js"></script>
+
+</head>
+
+<body>
+
+<h1>The Picture of Dorian Gray</h1>
+
+<div id="novel-text">
+Loading text...
+</div>
+
+</body>
+
+</html>
