@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 
+    let figureID = 0;
+
     fetch("Text/dorian_gray.xml")
         .then(response => {
             if (!response.ok) {
@@ -24,19 +26,14 @@ document.addEventListener("DOMContentLoaded", function () {
             // Figurative language patterns
             const patterns = [
 
-                // as X as Y (classic simile)
                 { regex: /\bas\s+[a-zA-Z'-]+\s+as\s+[a-zA-Z'-]+\b/gi, tag: "simile" },
 
-                // like a/an/the noun
                 { regex: /\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+\b/gi, tag: "simile" },
 
-                // extended like phrases (allows extra descriptive words)
                 { regex: /\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+(?:\s+[a-zA-Z'-]+){0,5}/gi, tag: "simile" },
 
-                // copula metaphor (was a, is a, became a, etc.)
                 { regex: /\b(?:was|were|is|are|became|becomes)\s+(?:a|an|the)\s+[a-zA-Z'-]+\b/gi, tag: "metaphor" },
 
-                // as if constructions
                 { regex: /\bas\s+if\s+[^.!?]+/gi, tag: "simile" }
 
             ];
@@ -47,9 +44,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 text = normalizeText(text);
 
                 patterns.forEach(p => {
-                    text = text.replace(p.regex, match =>
-                        `<${p.tag}>${match}</${p.tag}>`
-                    );
+
+                    text = text.replace(p.regex, match => {
+
+                        figureID++;
+
+                        const id = "figure-" + figureID;
+
+                        addToIndex(p.tag, match, id);
+
+                        return `<${p.tag} id="${id}">${match}</${p.tag}>`;
+
+                    });
+
                 });
 
                 output += `<p>${text}</p>`;
@@ -64,6 +71,46 @@ document.addEventListener("DOMContentLoaded", function () {
 
             document.getElementById("novel-text").innerHTML =
                 "<p>Failed to load the novel text. Make sure dorian_gray.xml is in the Text folder.</p>";
+
         });
+
+
+    // FUNCTION TO ADD ITEMS TO THE INDEX PANEL
+    function addToIndex(type, text, id){
+
+        let listID = "";
+
+        if(type === "simile"){
+            listID = "simile-list";
+        }
+
+        if(type === "metaphor"){
+            listID = "metaphor-list";
+        }
+
+        const list = document.getElementById(listID);
+
+        if(!list) return;
+
+        const li = document.createElement("li");
+
+        li.textContent = text;
+
+        li.addEventListener("click", function(){
+
+            const target = document.getElementById(id);
+
+            if(target){
+                target.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+            }
+
+        });
+
+        list.appendChild(li);
+
+    }
 
 });
