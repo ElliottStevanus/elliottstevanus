@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch("Text/dorian_gray.xml")
         .then(response => {
             if (!response.ok) {
-                throw new Error(`Failed to fetch dorian_gray.xml: ${response.status} ${response.statusText}`);
+                throw new Error(`Failed to fetch dorian_gray.xml: ${response.status}`);
             }
             return response.text();
         })
@@ -19,33 +19,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
             let output = "";
 
-            function normalizeText(text) {
-                return text.replace(/\s+/g, " ");
+            function normalizeText(text){
+                return text.replace(/\s+/g," ");
             }
 
             const patterns = [
 
-                // classic simile: as X as Y
-                { regex: /\bas\s+[a-zA-Z'-]+\s+as\s+[a-zA-Z'-]+\b/gi, tag: "simile" },
+                { regex:/\bas\s+[a-zA-Z'-]+\s+as\s+[a-zA-Z'-]+\b/gi, tag:"simile" },
 
-                // simile: like a/an/the noun
-                { regex: /\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+\b/gi, tag: "simile" },
+                { regex:/\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+\b/gi, tag:"simile" },
 
-                // extended "like" simile
-                { regex: /\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+(?:\s+[a-zA-Z'-]+){0,5}/gi, tag: "simile" },
+                { regex:/\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+(?:\s+[a-zA-Z'-]+){0,5}/gi, tag:"simile" },
 
-                // copula metaphor (was a / is a / became a)
-                { regex: /\b(?:was|were|is|are|became|becomes)\s+(?:a|an|the)\s+[a-zA-Z'-]+\b/gi, tag: "metaphor" },
+                { regex:/\b(?:was|were|is|are|became|becomes)\s+(?:a|an|the)\s+[a-zA-Z'-]+\b/gi, tag:"metaphor" },
 
-                // "as if" constructions
-                { regex: /\bas\s+if\s+[^.!?]+/gi, tag: "simile" },
+                { regex:/\bas\s+if\s+[^.!?]+/gi, tag:"simile" },
 
-                // NEW: "X of Y" metaphor pattern (very common in Wilde)
-                { regex: /\b[a-zA-Z'-]+\s+of\s+[a-zA-Z'-]+\b/gi, tag: "metaphor" }
+                { regex:/\b[a-zA-Z'-]+\s+of\s+[a-zA-Z'-]+\b/gi, tag:"metaphor" }
 
             ];
 
-            for (let i = 0; i < paragraphs.length; i++) {
+            for(let i=0;i<paragraphs.length;i++){
 
                 let text = paragraphs[i].textContent;
                 text = normalizeText(text);
@@ -59,9 +53,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         const id = "figure-" + figureID;
 
                         figures.push({
-                            type: p.tag,
-                            text: match,
-                            id: id
+                            type:p.tag,
+                            text:match,
+                            id:id
                         });
 
                         return `<${p.tag} id="${id}">${match}</${p.tag}>`;
@@ -70,64 +64,74 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 });
 
-                output += `<p>${text}</p>`;
+                output += `<p>${text}</p>;
+
             }
 
             document.getElementById("novel-text").innerHTML = output;
 
+            console.log("Figures detected:", figures.length);
 
-            // SEARCH SYSTEM (runs after figures are detected)
-
-            const searchBox = document.getElementById("figure-search");
-            const resultsList = document.getElementById("search-results");
-
-            function runSearch(){
-
-                const query = searchBox.value.toLowerCase();
-
-                resultsList.innerHTML = "";
-
-                if(query.length === 0) return;
-
-                figures.forEach(fig => {
-
-                    if(fig.text.toLowerCase().includes(query)){
-
-                        const li = document.createElement("li");
-
-                        li.textContent = `${fig.type}: ${fig.text}`;
-
-                        li.addEventListener("click", function(){
-
-                            const target = document.getElementById(fig.id);
-
-                            if(target){
-                                target.scrollIntoView({
-                                    behavior:"smooth",
-                                    block:"center"
-                                });
-                            }
-
-                        });
-
-                        resultsList.appendChild(li);
-
-                    }
-
-                });
-
-            }
-
-            searchBox.addEventListener("input", runSearch);
+            setupSearch(figures);
 
         })
         .catch(error => {
 
-            console.error("Error loading XML:", error);
+            console.error("Error loading XML:",error);
 
             document.getElementById("novel-text").innerHTML =
-                "<p>Failed to load the novel text. Make sure dorian_gray.xml is in the Text folder.</p>";
+            "<p>Failed to load the novel text.</p>";
 
         });
+
+
+    function setupSearch(figures){
+
+        const searchBox = document.getElementById("figure-search");
+        const resultsList = document.getElementById("search-results");
+
+        if(!searchBox || !resultsList){
+            console.log("Search elements not found.");
+            return;
+        }
+
+        searchBox.addEventListener("input", function(){
+
+            const query = this.value.toLowerCase();
+
+            resultsList.innerHTML = "";
+
+            if(query.length === 0) return;
+
+            figures.forEach(fig => {
+
+                if(fig.text.toLowerCase().includes(query)){
+
+                    const li = document.createElement("li");
+
+                    li.textContent = fig.text;
+
+                    li.addEventListener("click", function(){
+
+                        const target = document.getElementById(fig.id);
+
+                        if(target){
+                            target.scrollIntoView({
+                                behavior:"smooth",
+                                block:"center"
+                            });
+                        }
+
+                    });
+
+                    resultsList.appendChild(li);
+
+                }
+
+            });
+
+        });
+
+    }
 
 });
