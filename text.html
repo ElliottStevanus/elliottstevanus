@@ -28,7 +28,27 @@ simile:hover{
 metaphor:hover{
     background-color:#ffb3b3;
 }
+#analysis-panel{
+    background:#f7f7f7;
+    border:1px solid #ddd;
+    padding:15px;
+    margin-bottom:20px;
+}
 
+#analysis-panel ul{
+    max-height:200px;
+    overflow-y:auto;
+    padding-left:20px;
+}
+
+#analysis-panel li{
+    cursor:pointer;
+    margin-bottom:5px;
+}
+
+#analysis-panel li:hover{
+    text-decoration:underline;
+}
 </style>
 
 </head>
@@ -36,7 +56,26 @@ metaphor:hover{
 <body>
 
 <h1>The Picture of Dorian Gray</h1>
+<div id="analysis-panel">
 
+<h3>Figurative Language Index</h3>
+
+<div>
+<strong>Similes</strong>
+<ul id="simile-list"></ul>
+</div>
+
+<div>
+<strong>Metaphors</strong>
+<ul id="metaphor-list"></ul>
+</div>
+
+</div>
+
+<div id="novel-text">
+<p>Loading <em>The Picture of Dorian Gray</em>...</p>
+</div>
+    
 <div id="novel-text">
 Loading text...
 </div>
