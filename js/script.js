@@ -25,15 +25,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const patterns = [
 
+                // classic simile: as X as Y
                 { regex: /\bas\s+[a-zA-Z'-]+\s+as\s+[a-zA-Z'-]+\b/gi, tag: "simile" },
 
+                // simile: like a/an/the noun
                 { regex: /\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+\b/gi, tag: "simile" },
 
+                // extended "like" simile
                 { regex: /\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+(?:\s+[a-zA-Z'-]+){0,5}/gi, tag: "simile" },
 
+                // copula metaphor (was a / is a / became a)
                 { regex: /\b(?:was|were|is|are|became|becomes)\s+(?:a|an|the)\s+[a-zA-Z'-]+\b/gi, tag: "metaphor" },
 
-                { regex: /\bas\s+if\s+[^.!?]+/gi, tag: "simile" }
+                // "as if" constructions
+                { regex: /\bas\s+if\s+[^.!?]+/gi, tag: "simile" },
+
+                // NEW: "X of Y" metaphor pattern (very common in Wilde)
+                { regex: /\b[a-zA-Z'-]+\s+of\s+[a-zA-Z'-]+\b/gi, tag: "metaphor" }
 
             ];
 
@@ -67,6 +75,51 @@ document.addEventListener("DOMContentLoaded", function () {
 
             document.getElementById("novel-text").innerHTML = output;
 
+
+            // SEARCH SYSTEM (runs after figures are detected)
+
+            const searchBox = document.getElementById("figure-search");
+            const resultsList = document.getElementById("search-results");
+
+            function runSearch(){
+
+                const query = searchBox.value.toLowerCase();
+
+                resultsList.innerHTML = "";
+
+                if(query.length === 0) return;
+
+                figures.forEach(fig => {
+
+                    if(fig.text.toLowerCase().includes(query)){
+
+                        const li = document.createElement("li");
+
+                        li.textContent = `${fig.type}: ${fig.text}`;
+
+                        li.addEventListener("click", function(){
+
+                            const target = document.getElementById(fig.id);
+
+                            if(target){
+                                target.scrollIntoView({
+                                    behavior:"smooth",
+                                    block:"center"
+                                });
+                            }
+
+                        });
+
+                        resultsList.appendChild(li);
+
+                    }
+
+                });
+
+            }
+
+            searchBox.addEventListener("input", runSearch);
+
         })
         .catch(error => {
 
@@ -76,51 +129,5 @@ document.addEventListener("DOMContentLoaded", function () {
                 "<p>Failed to load the novel text. Make sure dorian_gray.xml is in the Text folder.</p>";
 
         });
-
-
-    // SEARCH SYSTEM
-    const searchBox = document.getElementById("figure-search");
-    const resultsList = document.getElementById("search-results");
-
-    if(searchBox){
-
-        searchBox.addEventListener("input", function(){
-
-            const query = this.value.toLowerCase();
-
-            resultsList.innerHTML = "";
-
-            if(query.length === 0) return;
-
-            figures.forEach(fig => {
-
-                if(fig.text.toLowerCase().includes(query)){
-
-                    const li = document.createElement("li");
-
-                    li.textContent = `${fig.type}: ${fig.text}`;
-
-                    li.addEventListener("click", function(){
-
-                        const target = document.getElementById(fig.id);
-
-                        if(target){
-                            target.scrollIntoView({
-                                behavior: "smooth",
-                                block: "center"
-                            });
-                        }
-
-                    });
-
-                    resultsList.appendChild(li);
-
-                }
-
-            });
-
-        });
-
-    }
 
 });
