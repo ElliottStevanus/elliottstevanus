@@ -11,4 +11,8 @@
     <xsl:template match="metaphor">
         <b><xsl:apply-templates/></b>
     </xsl:template>
+    
+     <xsl:template match ="paragraph">
+        <p><xsl:apply-templates/></p>
+    </xsl:template>
 </xsl:stylesheet>
