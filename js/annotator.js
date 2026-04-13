@@ -61,4 +61,28 @@ export function annotateXML(paragraphs) {
 
     xml += "</book>";
     return xml;
+
+    function expandClause(text, index) {
+
+    const before = text.slice(0, index);
+    const after = text.slice(index);
+
+    let start = Math.max(
+        before.lastIndexOf("."),
+        before.lastIndexOf("!"),
+        before.lastIndexOf("?")
+    );
+
+    start = start === -1 ? 0 : start + 1;
+
+    let end = after.search(/[.!?]/);
+
+    if (end === -1) {
+        end = Math.min(text.length, index + 80); // safety cap
+    } else {
+        end = index + end;
+    }
+
+    return { start, end };
+}
 }
