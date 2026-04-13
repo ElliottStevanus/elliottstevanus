@@ -6,18 +6,9 @@
 
     <xsl:template match="/">
 
-        <div>
-
-            <h1>The Picture of Dorian Gray</h1>
-
-            <div id="novel-text">
-                <xsl:apply-templates/>
-            </div>
-
-        </div>
+        <xsl:apply-templates/>
 
     </xsl:template>
-
 
     <xsl:template match="paragraph">
         <p><xsl:apply-templates/></p>
