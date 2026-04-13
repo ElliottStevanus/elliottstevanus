@@ -2,38 +2,59 @@ export function annotateXML(paragraphs) {
 
     let xml = "<book>";
 
-    Array.from(paragraphs).forEach(p => {
+    Array.from(paragraphs).forEach((p, pIndex) => {
 
         const text = p.textContent;
 
-        xml += "<paragraph>";
-
-        // SIMILES (simple + safe)
-        const similes = text.match(/\bas\s+[^.!?]+?\s+as\s+[^.!?]+|like\s+(a|an|the)\s+[^.!?]+|as\s+if\s+[^.!?]+/gi);
-
         let processed = text;
 
+        // -------------------------
+        // SIMILES FIRST (safe pass)
+        // -------------------------
+
+        const similes = text.match(
+            /\bas\s+[^.!?]+?\s+as\s+[^.!?]+|like\s+(a|an|the)\s+[^.!?]+|as\s+if\s+[^.!?]+/gi
+        );
+
         if (similes) {
-            similes.forEach((s, i) => {
-                processed = processed.replace(s, `<simile>${s}</simile>`);
+            similes.forEach(s => {
+                processed = processed.replace(
+                    s,
+                    `<simile>${s}</simile>`
+                );
             });
         }
 
-        // METAPHOR CLAUSE DETECTION
+        // -------------------------
+        // METAPHOR CLAUSES
+        // -------------------------
+
         const metaphorTriggers = /\b(is|are|was|were|became|becomes)\b/gi;
 
-        let m;
-        while ((m = metaphorTriggers.exec(text)) !== null) {
+        let match;
 
-            const clause = expandClause(text, m.index);
+        // IMPORTANT: reset regex state safety
+        metaphorTriggers.lastIndex = 0;
+
+        while ((match = metaphorTriggers.exec(text)) !== null) {
+
+            const clause = expandClause(text, match.index);
 
             const clauseText = text.slice(clause.start, clause.end);
 
-            processed = processed.replace(clauseText, `<metaphor>${clauseText}</metaphor>`);
+            // prevent double-wrapping
+            if (!processed.includes(`<metaphor>${clauseText}</metaphor>`)) {
+
+                processed = processed.replace(
+                    clauseText,
+                    `<metaphor>${clauseText}</metaphor>`
+                );
+            }
         }
 
+        xml += `<paragraph id="p${pIndex}">`;
         xml += processed;
-        xml += "</paragraph>";
+        xml += `</paragraph>`;
     });
 
     xml += "</book>";
