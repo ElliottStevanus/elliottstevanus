@@ -5,37 +5,10 @@
 <meta charset="UTF-8">
 <title>Dorian Gray Text</title>
 
-<nav>
-<a href="index.html">Home</a>
-<a href="text.html">Text</a>
-<a href="index.html#themes">Themes</a>
-<a href="index.html#analysis">Analysis</a>
-<a href="project.html">Project</a>
-<a href="index.html#about">About</a>
-</nav>
-    
 <script src="js/script.js" defer></script>
+
 <style>
 
-simile{
-    border-bottom:3px solid #2a6df4;
-    cursor:pointer;
-}
-
-metaphor{
-    background-color:#ffd6d6;
-    padding:2px 3px;
-    border-radius:3px;
-    cursor:pointer;
-}
-
-simile:hover{
-    background-color:#e6f0ff;
-}
-
-metaphor:hover{
-    background-color:#ffb3b3;
-}
 #analysis-panel{
     background:#f7f7f7;
     border:1px solid #ddd;
@@ -63,7 +36,18 @@ metaphor:hover{
 #search-results li:hover{
     text-decoration:underline;
 }
-    
+
+/* XSLT output styling */
+i{
+    border-bottom:3px solid #2a6df4;
+}
+
+b{
+    background-color:#ffd6d6;
+    padding:2px 3px;
+    border-radius:3px;
+}
+
 </style>
 
 </head>
@@ -71,15 +55,10 @@ metaphor:hover{
 <body>
 
 <h1>The Picture of Dorian Gray</h1>
+
 <div id="analysis-panel">
-
-<input
-type="text"
-id="figure-search"
-placeholder="Search figurative language...">
-
+<input type="text" id="figure-search" placeholder="Search figurative language...">
 <ul id="search-results"></ul>
-
 </div>
 
 <div id="novel-text">
