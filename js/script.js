@@ -52,11 +52,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
 
                 // convert string → XML node
-                const temp = parser.parseFromString(
-                    `<paragraph>${text}</paragraph>`,
-                    "text/xml"
-                );
+               function escapeXML(str){
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&apos;");
+}
 
+const safeText = escapeXML(text);
+
+const temp = parser.parseFromString(
+    `<paragraph>${safeText}</paragraph>`,
+    "text/xml"
+);
                 const imported = newDoc.importNode(temp.documentElement, true);
                 root.appendChild(imported);
             }
