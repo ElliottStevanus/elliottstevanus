@@ -7,10 +7,8 @@ export function annotateXML(paragraphs, patterns) {
     Array.from(paragraphs).forEach(p => {
 
         const text = p.textContent;
-
         let matches = [];
 
-        // collect matches
         patterns.forEach(rule => {
             const regex = new RegExp(rule.regex);
             let m;
@@ -27,7 +25,6 @@ export function annotateXML(paragraphs, patterns) {
 
         matches.sort((a, b) => a.start - b.start);
 
-        // remove overlaps
         let filtered = [];
         let lastEnd = 0;
 
@@ -38,31 +35,24 @@ export function annotateXML(paragraphs, patterns) {
             }
         }
 
-        // build XML
         annotatedXML += "<paragraph>";
 
         let cursor = 0;
 
         filtered.forEach(m => {
-
             annotatedXML += escapeXML(text.slice(cursor, m.start));
-
             annotatedXML += `<${m.tag}>${escapeXML(m.text)}</${m.tag}>`;
-
             cursor = m.end;
         });
 
         annotatedXML += escapeXML(text.slice(cursor));
         annotatedXML += "</paragraph>";
-
     });
 
     annotatedXML += "</book>";
-
     return annotatedXML;
 }
 
-// prevents broken XML
 function escapeXML(str) {
     return str
         .replace(/&/g, "&amp;")
