@@ -1,6 +1,6 @@
-import { annotateXML } from "./annotator.js";
-import { setupUI } from "./ui.js";
-import { runXSLT } from "./renderer.js";
+import { annotateXML } from "/js/annotator.js";
+import { setupUI } from "/js/ui.js";
+import { runXSLT } from "/js/renderer.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
