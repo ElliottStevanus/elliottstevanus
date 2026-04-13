@@ -13,26 +13,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const paragraphs = xml.getElementsByTagName("paragraph");
 
-    const patterns = [
-        {
-            regex: /\bas\s+.*?\s+as\s+.*?\b/gi,
-            tag: "simile"
-        },
-        {
-            regex: /\blike\s+(a|an|the)\s+.*?\b/gi,
-            tag: "simile"
-        },
-        {
-            regex: /\b(is|was|were|became)\s+(a|an|the)\s+.*?\b/gi,
-            tag: "metaphor"
-        }
-    ];
-
-    const annotatedXML = annotateXML(paragraphs, patterns);
+    const annotatedXML = annotateXML(paragraphs);
     const annotatedDoc = new DOMParser().parseFromString(annotatedXML, "text/xml");
 
-    // default view
     renderReadingView(annotatedDoc, container);
-
     setupUI(container, annotatedDoc);
 });
