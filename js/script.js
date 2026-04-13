@@ -1,11 +1,14 @@
-import { annotateXML } from "./js/annotator.js";
-import { setupUI } from "./js/ui.js";
+import { annotateXML } from "./annotator.js";
+import { setupUI } from "./ui.js";
+import { runXSLT } from "./renderer.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
+    console.log("Script loaded ✔");
+
     const container = document.getElementById("novel-text");
 
-    const xmlText = await fetch("Text/dorian_gray.xml").then(r => r.text());
+    const xmlText = await fetch("../Text/dorian_gray.xml").then(r => r.text());
     const xml = new DOMParser().parseFromString(xmlText, "text/xml");
 
     const paragraphs = xml.getElementsByTagName("paragraph");
@@ -19,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // STEP 2: initial render
     runXSLT("xsl/reading.xsl", annotatedDoc, container);
 
-    // STEP 3: UI setup
+    // STEP 3: UI
     setupUI(container, annotatedDoc);
 
     // BUTTONS
@@ -32,25 +35,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("view-analysis").onclick = () =>
         runXSLT("xsl/analysis.xsl", annotatedDoc, container);
 });
-
-
-// ✅ MUST BE OUTSIDE DOMContentLoaded
-function runXSLT(path, xmlDoc, container) {
-
-    fetch(path)
-        .then(r => r.text())
-        .then(xsltText => {
-
-            const xsltDoc =
-                new DOMParser().parseFromString(xsltText, "text/xml");
-
-            const processor = new XSLTProcessor();
-            processor.importStylesheet(xsltDoc);
-
-            const result =
-                processor.transformToFragment(xmlDoc, document);
-
-            container.innerHTML = "";
-            container.appendChild(result);
-        });
-}
