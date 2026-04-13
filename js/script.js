@@ -2,80 +2,99 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const parser = new DOMParser();
 
-    window.addEventListener("load", function () {
+    console.log("Pipeline starting...");
 
-        console.log("Starting pipeline...");
+    fetch("Text/dorian_gray.xml")
+        .then(res => {
+            if (!res.ok) throw new Error("XML load failed");
+            return res.text();
+        })
+        .then(xmlText => {
 
-        fetch("Text/dorian_gray.xml")
-            .then(res => {
-                if (!res.ok) throw new Error("XML load failed");
-                return res.text();
-            })
-            .then(xmlText => {
+            // =========================
+            // PARSE XML
+            // =========================
+            const xml = parser.parseFromString(xmlText, "text/xml");
+            const paragraphs = xml.getElementsByTagName("paragraph");
 
-                const xml = parser.parseFromString(xmlText, "text/xml");
-                const paragraphs = xml.getElementsByTagName("paragraph");
+            const newDoc = document.implementation.createDocument("", "root", null);
+            const root = newDoc.documentElement;
 
-                let newDoc = document.implementation.createDocument("", "root", null);
-                const root = newDoc.documentElement;
+            let figureID = 0;
 
-                let figureID = 0;
+            const patterns = [
+                { regex: /\bas\s+[a-zA-Z'-]+\s+as\s+[a-zA-Z'-]+/gi, tag: "simile" },
+                { regex: /\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+/gi, tag: "simile" },
+                { regex: /\b(?:was|were|is|are|became|becomes)\s+(?:a|an|the)\s+[a-zA-Z'-]+/gi, tag: "metaphor" },
+                { regex: /\bas\s+if\s+[^.!?]+/gi, tag: "simile" }
+            ];
 
-                const patterns = [
-                    { regex: /\bas\s+[a-zA-Z'-]+\s+as\s+[a-zA-Z'-]+/gi, tag: "simile" },
-                    { regex: /\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+/gi, tag: "simile" },
-                    { regex: /\b(?:was|were|is|are|became|becomes)\s+(?:a|an|the)\s+[a-zA-Z'-]+/gi, tag: "metaphor" },
-                    { regex: /\bas\s+if\s+[^.!?]+/gi, tag: "simile" }
-                ];
+            function escapeXML(str) {
+                return str
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+            }
 
-                for (let p of paragraphs) {
+            // =========================
+            // REGEX ANNOTATION
+            // =========================
+            for (let p of paragraphs) {
 
-                    let text = p.textContent.replace(/\s+/g, " ");
+                let text = p.textContent.replace(/\s+/g, " ");
 
-                    patterns.forEach(rule => {
-                        text = text.replace(rule.regex, match => {
+                patterns.forEach(rule => {
+                    text = text.replace(rule.regex, match => {
 
-                            figureID++;
-                            return `<${rule.tag} id="fig-${figureID}">${match}</${rule.tag}>`;
-
-                        });
+                        figureID++;
+                        return `<${rule.tag} id="fig-${figureID}">${match}</${rule.tag}>`;
                     });
+                });
 
-                    const temp = parser.parseFromString(
-                        `<paragraph>${escapeXML(text)}</paragraph>`,
-                        "text/xml"
-                    );
+                const temp = parser.parseFromString(
+                    `<paragraph>${escapeXML(text)}</paragraph>`,
+                    "text/xml"
+                );
 
-                    root.appendChild(newDoc.importNode(temp.documentElement, true));
-                }
+                root.appendChild(newDoc.importNode(temp.documentElement, true));
+            }
 
-                console.log("Regex annotation complete");
+            console.log("Regex annotation complete");
 
-                return fetch("xslt/transform.xsl")
-                    .then(res => res.text())
-                    .then(xslText => {
+            // =========================
+            // APPLY XSLT
+            // =========================
+            return fetch("xslt/transform.xsl")
+                .then(res => {
+                    if (!res.ok) throw new Error("XSLT load failed");
+                    return res.text();
+                })
+                .then(xslText => {
 
-                        const xslDoc = parser.parseFromString(xslText, "text/xml");
+                    const xslDoc = parser.parseFromString(xslText, "text/xml");
 
-                        const xslt = new XSLTProcessor();
-                        xslt.importStylesheet(xslDoc);
+                    const xslt = new XSLTProcessor();
+                    xslt.importStylesheet(xslDoc);
 
-                        const result = xslt.transformToFragment(newDoc, document);
+                    const result = xslt.transformToFragment(newDoc, document);
 
-                        document.getElementById("novel-text").innerHTML = "";
-                        document.getElementById("novel-text").appendChild(result);
+                    const container = document.getElementById("novel-text");
+                    container.innerHTML = "";
+                    container.appendChild(result);
 
-                        setupSearch();
-                    });
+                    console.log("XSLT render complete");
 
-            })
-            .catch(err => {
-                console.error("Pipeline error:", err);
-            });
-    });
+                    // 🔥 CRITICAL: search ONLY AFTER DOM exists
+                    setupSearch();
+                });
+
+        })
+        .catch(err => {
+            console.error("Pipeline error:", err);
+        });
 
     // =========================
-    // SEARCH (runs AFTER XSLT)
+    // SEARCH SYSTEM
     // =========================
     function setupSearch() {
 
@@ -94,7 +113,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (!query) return;
 
-            const items = document.querySelectorAll("simile, metaphor, .simile, .metaphor");
+            // ONLY CLASS SELECTORS (matches XSLT output)
+            const items = document.querySelectorAll(".simile, .metaphor");
 
             items.forEach(el => {
 
@@ -120,16 +140,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
         });
-    }
-
-    // =========================
-    // XML ESCAPE HELPER
-    // =========================
-    function escapeXML(str) {
-        return str
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;");
     }
 
 });
