@@ -27,7 +27,7 @@ export function annotateXML(paragraphs) {
         // -------------------------
         // METAPHOR TRIGGERS → CLAUSE EXPANSION
         // -------------------------
-        const triggerRegex = /\b(is|are|was|were|became|becomes)\b/gi;
+        const triggerRegex = \b(is|are|was|were|became|becomes)\s+(a|an|the)\b/gi;
 
         while ((m = triggerRegex.exec(text)) !== null) {
 
