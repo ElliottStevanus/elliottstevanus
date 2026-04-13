@@ -3,6 +3,7 @@ export function setupUI({ container, annotatedDoc, runXSLT }) {
     const searchBox = document.getElementById("figure-search");
     const resultsList = document.getElementById("search-results");
 
+    
     // -------------------------
     // VIEW BUTTONS
     // -------------------------
