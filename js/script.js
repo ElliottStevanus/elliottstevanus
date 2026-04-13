@@ -2,7 +2,7 @@ import { annotateXML } from "./annotator.js";
 import { setupUI } from "./ui.js";
 import { runXSLT } from "./renderer.js";
 
-let annotatedDoc; // 👈 IMPORTANT: global within module
+let annotatedDoc; // MUST be here (module scope)
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -17,17 +17,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     annotatedDoc = new DOMParser().parseFromString(annotatedXML, "text/xml");
 
-    // initial render
     runXSLT("xsl/reading.xsl", annotatedDoc, container);
 
     setupUI(container, annotatedDoc);
 
-    document.getElementById("view-reading").onclick = () =>
-        runXSLT("xsl/reading.xsl", annotatedDoc, container);
-
-    document.getElementById("view-metaphor").onclick = () =>
-        runXSLT("xsl/metaphor.xsl", annotatedDoc, container);
-
-    document.getElementById("view-analysis").onclick = () =>
-        runXSLT("xsl/analysis.xsl", annotatedDoc, container);
 });
