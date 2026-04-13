@@ -10,29 +10,34 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const paragraphs = xml.getElementsByTagName("paragraph");
 
+    // STEP 1: annotate
     const annotatedXML = annotateXML(paragraphs);
-    const annotatedDoc = new DOMParser().parseFromString(annotatedXML, "text/xml");
 
-    // initial render
-    renderView("xsl/reading.xsl", annotatedDoc, container);
+    console.log("Annotated XML:", annotatedXML); // ✅ DEBUG HERE
 
-    // setup UI ONCE (but it will need re-binding after each render)
-    setupUI(container, annotatedDoc, renderView);
+    const annotatedDoc =
+        new DOMParser().parseFromString(annotatedXML, "text/xml");
 
-    // buttons
+    // STEP 2: initial render
+    runXSLT("xsl/reading.xsl", annotatedDoc, container);
+
+    // STEP 3: UI setup (ONLY AFTER annotatedDoc exists)
+    setupUI(container, annotatedDoc);
+
+    // BUTTONS
     document.getElementById("view-reading").onclick = () =>
-        renderView("xsl/reading.xsl", annotatedDoc, container);
+        runXSLT("xsl/reading.xsl", annotatedDoc, container);
 
     document.getElementById("view-metaphor").onclick = () =>
-        renderView("xsl/metaphor.xsl", annotatedDoc, container);
+        runXSLT("xsl/metaphor.xsl", annotatedDoc, container);
 
     document.getElementById("view-analysis").onclick = () =>
-        renderView("xsl/analysis.xsl", annotatedDoc, container);
+        runXSLT("xsl/analysis.xsl", annotatedDoc, container);
 });
 
 // -------------------------
 
-function renderView(path, xmlDoc, container) {
+function runXSLT(path, xmlDoc, container) {
 
     fetch(path)
         .then(r => r.text())
