@@ -6,7 +6,9 @@
     <xsl:strip-space elements="*"/>
     <xsl:output method="html" indent="yes"/>
 
-    <!-- FULL PAGE STRUCTURE -->
+    <!-- =========================
+         FULL HTML STRUCTURE
+    ========================== -->
     <xsl:template match="/">
 
         <html>
@@ -15,20 +17,19 @@
                 <meta charset="UTF-8"/>
                 <title>Dorian Gray Text</title>
 
-                <!-- CSS MUST LIVE HERE NOW -->
-                <link rel="stylesheet" href="../css/style.css"/>
-
-                <!-- JS MUST LIVE HERE NOW -->
-                <script src="../js/script.js" defer="defer"></script>
+                <!-- IMPORTANT: use ROOT-RELATIVE PATHS -->
+                <link rel="stylesheet" href="css/style.css"/>
             </head>
 
             <body>
 
                 <h1>The Picture of Dorian Gray</h1>
 
-                <!-- SEARCH UI -->
+                <!-- SEARCH UI (JS already in text.html only) -->
                 <div id="analysis-panel">
-                    <input type="text" id="figure-search" placeholder="Search figurative language..."/>
+                    <input type="text" id="figure-search"
+                        placeholder="Search figurative language..."/>
+
                     <ul id="search-results"></ul>
                 </div>
 
@@ -37,20 +38,26 @@
                     <xsl:apply-templates/>
                 </div>
 
+                <!-- JS LOADED ONLY ONCE (via text.html) -->
+
             </body>
 
         </html>
 
     </xsl:template>
 
-    <!-- TEXT STRUCTURE -->
+    <!-- =========================
+         TEXT STRUCTURE
+    ========================== -->
     <xsl:template match="paragraph">
         <p>
             <xsl:apply-templates/>
         </p>
     </xsl:template>
 
-    <!-- FIGURATIVE LANGUAGE -->
+    <!-- =========================
+         FIGURATIVE LANGUAGE
+    ========================== -->
     <xsl:template match="simile">
         <i class="simile">
             <xsl:apply-templates/>
