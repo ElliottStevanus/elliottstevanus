@@ -3,17 +3,28 @@ document.addEventListener("DOMContentLoaded", function () {
     let figureID = 0;
     let figures = [];
 
+    const parser = new DOMParser();
+
     fetch("Text/dorian_gray.xml")
-        .then(res => res.text())
+        .then(res => {
+            if(!res.ok) throw new Error("XML load failed");
+            return res.text();
+        })
         .then(str => {
 
-            const parser = new DOMParser();
             const xml = parser.parseFromString(str, "text/xml");
 
             const paragraphs = xml.getElementsByTagName("paragraph");
 
             function normalizeText(text){
                 return text.replace(/\s+/g," ");
+            }
+
+            function escapeXML(str){
+                return str
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
             }
 
             const patterns = [
@@ -25,11 +36,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 { regex:/\b[a-zA-Z'-]+\s+of\s+[a-zA-Z'-]+\b/gi, tag:"metaphor" }
             ];
 
-            // NEW XML DOCUMENT
             const newDoc = document.implementation.createDocument("", "root", null);
             const root = newDoc.documentElement;
 
-            for(let i=0;i<paragraphs.length;i++){
+            for(let i = 0; i < paragraphs.length; i++){
 
                 let text = paragraphs[i].textContent;
                 text = normalizeText(text);
@@ -41,40 +51,34 @@ document.addEventListener("DOMContentLoaded", function () {
                         const id = "figure-" + figureID;
 
                         figures.push({
-                            type:p.tag,
-                            text:match,
-                            id:id
+                            type: p.tag,
+                            text: match,
+                            id: id
                         });
 
                         return `<${p.tag} id="${id}">${match}</${p.tag}>`;
-
                     });
                 });
 
-                // convert string → XML node
+                const safeText = escapeXML(text);
 
-function escapeXML(str){
-    return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-}
+                const temp = parser.parseFromString(
+                    `<paragraph>${safeText}</paragraph>`,
+                    "text/xml"
+                );
 
-const safeText = escapeXML(text);
-
-const temp = parser.parseFromString(
-    `<paragraph>${safeText}</paragraph>`,
-    "text/xml"
-);
                 const imported = newDoc.importNode(temp.documentElement, true);
                 root.appendChild(imported);
             }
 
             console.log("Figures detected:", figures.length);
 
-            // APPLY XSLT
-            fetch("xslt/transform.xsl")
-                .then(res => res.text())
+            // NOW LOAD XSLT PROPERLY
+            return fetch("xslt/transform.xsl")
+                .then(res => {
+                    if(!res.ok) throw new Error("XSLT load failed");
+                    return res.text();
+                })
                 .then(xslText => {
 
                     const xslDoc = parser.parseFromString(xslText, "text/xml");
@@ -88,13 +92,17 @@ const temp = parser.parseFromString(
                     container.innerHTML = "";
                     container.appendChild(result);
 
+                    // ONLY RUN SEARCH AFTER EVERYTHING IS READY
+                    setupSearch(figures);
                 });
 
-            setupSearch(figures);
-
+        })
+        .catch(err => {
+            console.error("PIPELINE ERROR:", err);
+            document.getElementById("novel-text").innerHTML =
+                "<p>Failed to load text.</p>";
         });
 
-    // SEARCH SYSTEM
     function setupSearch(figures){
 
         const searchBox = document.getElementById("figure-search");
@@ -124,16 +132,12 @@ const temp = parser.parseFromString(
                                 block:"center"
                             });
                         }
-
                     });
 
                     resultsList.appendChild(li);
                 }
-
             });
-
         });
-
     }
 
 });
