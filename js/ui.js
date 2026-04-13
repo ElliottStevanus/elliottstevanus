@@ -61,7 +61,9 @@ export function setupUI(container, annotatedDoc) {
 
 function runXSLT(container, xmlDoc) {
 
-    const xsltText = document.getElementById("metaphor-xsl").textContent;
+const xsltText = document
+    .getElementById("metaphor-xsl")
+    .textContent.trim();
     const xsltDoc = new DOMParser().parseFromString(xsltText, "text/xml");
 
     const processor = new XSLTProcessor();
