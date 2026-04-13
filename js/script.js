@@ -35,8 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 { regex:/\b[a-zA-Z'-]+\s+of\s+[a-zA-Z'-]+\b/gi, tag:"metaphor" }
             ];
 
-            const newDoc = document.implementation.createDocument("", "root", null);
-            const root = newDoc.documentElement;
+const newDoc = document.implementation.createDocument(null, "root", null);            const root = newDoc.documentElement;
 
             for(let i = 0; i < paragraphs.length; i++){
 
