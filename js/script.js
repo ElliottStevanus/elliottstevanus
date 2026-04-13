@@ -52,13 +52,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
 
                 // convert string → XML node
-               function escapeXML(str){
+
+function escapeXML(str){
     return str
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&apos;");
+        .replace(/>/g, "&gt;");
 }
 
 const safeText = escapeXML(text);
