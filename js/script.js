@@ -10,18 +10,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const paragraphs = xml.getElementsByTagName("paragraph");
 
-    // CREATE IT HERE
+    // STEP 1: annotate
     const annotatedXML = annotateXML(paragraphs);
 
     const annotatedDoc =
         new DOMParser().parseFromString(annotatedXML, "text/xml");
 
-    // EVERYTHING THAT USES IT MUST BE HERE ↓↓↓
-
+    // STEP 2: initial render
     runXSLT("xsl/reading.xsl", annotatedDoc, container);
 
+    // STEP 3: UI setup
     setupUI(container, annotatedDoc);
 
+    // BUTTONS
     document.getElementById("view-reading").onclick = () =>
         runXSLT("xsl/reading.xsl", annotatedDoc, container);
 
@@ -30,7 +31,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById("view-analysis").onclick = () =>
         runXSLT("xsl/analysis.xsl", annotatedDoc, container);
-    function runXSLT(path, xmlDoc, container) {
+});
+
+
+// ✅ MUST BE OUTSIDE DOMContentLoaded
+function runXSLT(path, xmlDoc, container) {
 
     fetch(path)
         .then(r => r.text())
@@ -49,4 +54,3 @@ document.addEventListener("DOMContentLoaded", async () => {
             container.appendChild(result);
         });
 }
-});
