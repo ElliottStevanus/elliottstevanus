@@ -15,12 +15,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const paragraphs = xml.getElementsByTagName("paragraph");
 
             const patterns = [
-                { regex: /\bas\s+[a-zA-Z'-]+\s+as\s+[a-zA-Z'-]+/gi, type: "simile" },
-                { regex: /\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+/gi, type: "simile" },
-                { regex: /\b(is|was|were|are|became|becomes)\s+(a|an|the)\s+[a-zA-Z'-]+/gi, type: "metaphor" },
-                { regex: /\bas\s+if\s+[^.!?]+/gi, type: "simile" }
-            ];
-
+            { regex:/\bas\s+[a-zA-Z'-]+\s+as\s+[a-zA-Z'-]+\b/gi, tag:"simile" }, 
+              { regex:/\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+\b/gi, tag:"simile" }, 
+              { regex:/\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+(?:\s+[a-zA-Z'-]+){0,5}/gi, tag:"simile" }, 
+              { regex:/\b(?:was|were|is|are|became|becomes)\s+(?:a|an|the)\s+[a-zA-Z'-]+\b/gi, tag:"metaphor" }, 
+              { regex:/\bas\s+if\s+[^.!?]+/gi, tag:"simile" }, 
+            { regex:/\b[a-zA-Z'-]+\s+of\s+[a-zA-Z'-]+\b/gi, tag:"metaphor" }
             let html = "";
 
             Array.from(paragraphs).forEach(p => {
