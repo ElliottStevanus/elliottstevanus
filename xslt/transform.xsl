@@ -4,6 +4,7 @@
     </span>
 </xsl:template>
 
+
 <xsl:template match="metaphor">
     <span class="metaphor">
         <xsl:apply-templates/>
