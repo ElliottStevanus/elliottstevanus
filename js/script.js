@@ -10,27 +10,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const paragraphs = xml.getElementsByTagName("paragraph");
 
-    // STEP 1: annotate
     const annotatedXML = annotateXML(paragraphs);
     const annotatedDoc = new DOMParser().parseFromString(annotatedXML, "text/xml");
 
-    // default view
-    runXSLT("xsl/reading.xsl", annotatedDoc, container);
+    // initial render
+    renderView("xsl/reading.xsl", annotatedDoc, container);
 
-    // UI buttons
+    // setup UI ONCE (but it will need re-binding after each render)
+    setupUI(container, annotatedDoc, renderView);
+
+    // buttons
     document.getElementById("view-reading").onclick = () =>
-        runXSLT("xsl/reading.xsl", annotatedDoc, container);
+        renderView("xsl/reading.xsl", annotatedDoc, container);
 
     document.getElementById("view-metaphor").onclick = () =>
-        runXSLT("xsl/metaphor.xsl", annotatedDoc, container);
+        renderView("xsl/metaphor.xsl", annotatedDoc, container);
 
     document.getElementById("view-analysis").onclick = () =>
-        runXSLT("xsl/analysis.xsl", annotatedDoc, container);
+        renderView("xsl/analysis.xsl", annotatedDoc, container);
 });
 
 // -------------------------
 
-function runXSLT(path, xmlDoc, container) {
+function renderView(path, xmlDoc, container) {
 
     fetch(path)
         .then(r => r.text())
