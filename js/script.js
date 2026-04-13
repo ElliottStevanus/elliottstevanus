@@ -13,13 +13,43 @@ document.addEventListener("DOMContentLoaded", () => {
             const xml = new DOMParser().parseFromString(xmlText, "text/xml");
 
             const paragraphs = xml.getElementsByTagName("paragraph");
+const patterns = [
+  {
+    // "as X as Y" similes (improved word safety)
+    regex: /\bas\s+[a-zA-Z'-]+(?:\s+[a-zA-Z'-]+){0,2}\s+as\s+[a-zA-Z'-]+(?:\s+[a-zA-Z'-]+){0,2}\b/gi,
+    tag: "simile"
+  },
 
-           regex:/\bas\s+[a-zA-Z'-]+\s+as\s+[a-zA-Z'-]+\b/gi, tag:"simile" }, 
-              { regex:/\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+\b/gi, tag:"simile" }, 
-              { regex:/\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+(?:\s+[a-zA-Z'-]+){0,5}/gi, tag:"simile" }, 
-              { regex:/\b(?:was|were|is|are|became|becomes)\s+(?:a|an|the)\s+[a-zA-Z'-]+\b/gi, tag:"metaphor" }, 
-              { regex:/\bas\s+if\s+[^.!?]+/gi, tag:"simile" }, 
-            { regex:/\b[a-zA-Z'-]+\s+of\s+[a-zA-Z'-]+\b/gi, tag:"metaphor" }
+  {
+    // "like a/an/the X" (limited phrase length to reduce noise)
+    regex: /\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+(?:\s+[a-zA-Z'-]+){0,3}\b/gi,
+    tag: "simile"
+  },
+
+  {
+    // extended similes with "like a/an/the X ..." but capped more strictly
+    regex: /\blike\s+(?:a|an|the)\s+[a-zA-Z'-]+(?:\s+[a-zA-Z'-]+){1,4}\b/gi,
+    tag: "simile"
+  },
+
+  {
+    // "is/was/are/becomes a X" metaphors (improved structure + prevents sentence bleed)
+    regex: /\b(?:is|are|was|were|becomes|became)\s+(?:a|an|the)\s+[a-zA-Z'-]+(?:\s+[a-zA-Z'-]+){0,2}\b/gi,
+    tag: "metaphor"
+  },
+
+  {
+    // "as if ..." similes (stops at punctuation OR line end)
+    regex: /\bas\s+if\s+[^.!?\n]+/gi,
+    tag: "simile"
+  },
+
+  {
+    // "X of Y" metaphors — restricted to reduce literal phrases like "cup of tea"
+    regex: /\b(?:heart|sea|river|storm|wave|sea|ocean|world|mountain|sea|forest|fire|sea)\s+of\s+[a-zA-Z'-]+(?:\s+[a-zA-Z'-]+){0,2}\b/gi,
+    tag: "metaphor"
+  }
+];
             let html = "";
 
             Array.from(paragraphs).forEach(p => {
