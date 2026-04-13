@@ -1,128 +1,39 @@
-// ui.js
-
-import { renderReadingView } from "./renderer.js";
-
 export function setupUI(container, annotatedDoc) {
 
     const searchBox = document.getElementById("figure-search");
     const resultsList = document.getElementById("search-results");
 
-    // -------------------------
-    // VIEW SWITCHING
-    // -------------------------
+    function bindSearch() {
 
-    document.getElementById("view-reading").onclick = () => {
-        renderReadingView(annotatedDoc, container);
-        attachSpanEvents(container);
-    };
+        searchBox.addEventListener("input", () => {
 
-    document.getElementById("view-metaphor").onclick = async () => {
-        await runXSLT(container, annotatedDoc);
-        attachMetaphorListEvents();
-    };
+            const query = searchBox.value.toLowerCase();
+            resultsList.innerHTML = "";
 
-    document.getElementById("view-analysis").onclick = () => {
-        renderAnalysisView(container, annotatedDoc);
-    };
+            if (!query) return;
 
-    // -------------------------
-    // SEARCH
-    // -------------------------
+            const metaphors = annotatedDoc.getElementsByTagName("metaphor");
 
-    searchBox.addEventListener("input", () => {
+            Array.from(metaphors).forEach(m => {
 
-        const query = searchBox.value.toLowerCase();
-        resultsList.innerHTML = "";
+                if (m.textContent.toLowerCase().includes(query)) {
 
-        if (!query) return;
+                    const li = document.createElement("li");
+                    li.textContent = m.textContent;
 
-        const metaphors = annotatedDoc.getElementsByTagName("metaphor");
+                    li.onclick = () => {
+                        alert(
+                            m.textContent +
+                            "\n\n" +
+                            m.parentNode.textContent
+                        );
+                    };
 
-        Array.from(metaphors).forEach(m => {
-
-            if (m.textContent.toLowerCase().includes(query)) {
-
-                const li = document.createElement("li");
-                li.textContent = m.textContent;
-
-                li.onclick = () => {
-                    alert(m.textContent + "\n\n" + m.parentNode.textContent);
-                };
-
-                resultsList.appendChild(li);
-            }
+                    resultsList.appendChild(li);
+                }
+            });
         });
-    });
-}
+    }
 
-// -------------------------
-// XSLT VIEW
-// -------------------------
-
-async function runXSLT(container, xmlDoc) {
-
-    const xsltText = await fetch("xsl/metaphor.xsl")
-        .then(r => r.text());
-
-    const xsltDoc = new DOMParser()
-        .parseFromString(xsltText, "text/xml");
-
-    const processor = new XSLTProcessor();
-    processor.importStylesheet(xsltDoc);
-
-    const result = processor.transformToFragment(xmlDoc, document);
-
-    container.innerHTML = "";
-    container.appendChild(result);
-}
-
-// -------------------------
-// ANALYSIS VIEW
-// -------------------------
-
-function renderAnalysisView(container, xmlDoc) {
-
-    container.innerHTML = "";
-
-    const metaphors = xmlDoc.getElementsByTagName("metaphor");
-
-    Array.from(metaphors).forEach(m => {
-
-        const div = document.createElement("div");
-        div.className = "analysis-item";
-        div.textContent = m.textContent;
-
-        div.onclick = () => {
-            alert(m.textContent + "\n\n" + m.parentNode.textContent);
-        };
-
-        container.appendChild(div);
-    });
-}
-
-// -------------------------
-// EVENTS
-// -------------------------
-
-function attachSpanEvents(container) {
-
-    container.querySelectorAll("span.metaphor, span.simile").forEach(el => {
-
-        el.style.cursor = "pointer";
-
-        el.onclick = () => {
-            alert(el.textContent + "\n\n" + el.parentNode.textContent);
-        };
-    });
-}
-
-function attachMetaphorListEvents() {
-
-    document.querySelectorAll(".metaphor-item").forEach(item => {
-
-        item.onclick = () => {
-            const context = item.getAttribute("data-context");
-            alert(item.textContent + "\n\n" + context);
-        };
-    });
+    bindSearch();
 }
