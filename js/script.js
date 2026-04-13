@@ -1,5 +1,5 @@
-import { annotateXML } from "js/annotator.js";
-import { setupUI } from "js/ui.js";
+import { annotateXML } from "./annotator.js";
+import { setupUI } from "./ui.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
