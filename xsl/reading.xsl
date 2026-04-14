@@ -28,7 +28,8 @@
         }
 
         p {
-            margin: 0 0 14px 0;
+            margin: 0 0 18px 0;
+            text-indent: 1.5em;
         }
     </style>
 </head>
@@ -37,9 +38,32 @@
 
 <div class="reading-container">
 
-<xsl:for-each select="//paragraph">
+<!-- GROUP EVERY 5 SENTENCES INTO ONE PARAGRAPH -->
+<xsl:for-each select="//paragraph[position() mod 5 = 1]">
     <p>
+
         <xsl:value-of select="."/>
+        <xsl:text> </xsl:text>
+
+        <xsl:if test="following-sibling::paragraph[1]">
+            <xsl:value-of select="following-sibling::paragraph[1]"/>
+            <xsl:text> </xsl:text>
+        </xsl:if>
+
+        <xsl:if test="following-sibling::paragraph[2]">
+            <xsl:value-of select="following-sibling::paragraph[2]"/>
+            <xsl:text> </xsl:text>
+        </xsl:if>
+
+        <xsl:if test="following-sibling::paragraph[3]">
+            <xsl:value-of select="following-sibling::paragraph[3]"/>
+            <xsl:text> </xsl:text>
+        </xsl:if>
+
+        <xsl:if test="following-sibling::paragraph[4]">
+            <xsl:value-of select="following-sibling::paragraph[4]"/>
+        </xsl:if>
+
     </p>
 </xsl:for-each>
 
