@@ -31,6 +31,18 @@
             margin: 0 0 18px 0;
             text-indent: 1.5em;
         }
+
+        .metaphor {
+            background: rgba(255, 200, 0, 0.35);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .simile {
+            background: rgba(100, 160, 255, 0.35);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 
@@ -42,26 +54,26 @@
 <xsl:for-each select="//paragraph[position() mod 5 = 1]">
     <p>
 
-        <xsl:value-of select="."/>
+        <xsl:apply-templates select="node()"/>
         <xsl:text> </xsl:text>
 
         <xsl:if test="following-sibling::paragraph[1]">
-            <xsl:value-of select="following-sibling::paragraph[1]"/>
+            <xsl:apply-templates select="following-sibling::paragraph[1]/node()"/>
             <xsl:text> </xsl:text>
         </xsl:if>
 
         <xsl:if test="following-sibling::paragraph[2]">
-            <xsl:value-of select="following-sibling::paragraph[2]"/>
+            <xsl:apply-templates select="following-sibling::paragraph[2]/node()"/>
             <xsl:text> </xsl:text>
         </xsl:if>
 
         <xsl:if test="following-sibling::paragraph[3]">
-            <xsl:value-of select="following-sibling::paragraph[3]"/>
+            <xsl:apply-templates select="following-sibling::paragraph[3]/node()"/>
             <xsl:text> </xsl:text>
         </xsl:if>
 
         <xsl:if test="following-sibling::paragraph[4]">
-            <xsl:value-of select="following-sibling::paragraph[4]"/>
+            <xsl:apply-templates select="following-sibling::paragraph[4]/node()"/>
         </xsl:if>
 
     </p>
@@ -71,6 +83,25 @@
 
 </body>
 </html>
+</xsl:template>
+
+<!-- HIGHLIGHT METAPHORS -->
+<xsl:template match="metaphor">
+    <span class="metaphor">
+        <xsl:apply-templates/>
+    </span>
+</xsl:template>
+
+<!-- HIGHLIGHT SIMILES -->
+<xsl:template match="simile">
+    <span class="simile">
+        <xsl:apply-templates/>
+    </span>
+</xsl:template>
+
+<!-- DEFAULT TEXT -->
+<xsl:template match="text()">
+    <xsl:value-of select="."/>
 </xsl:template>
 
 </xsl:stylesheet>
