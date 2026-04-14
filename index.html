@@ -14,9 +14,7 @@ body{
     color:#333;
 }
 
-/* =========================
-   FULL BACKGROUND IMAGE
-========================= */
+/* Dorian image*/
 
 body::before {
     content: "";
@@ -27,13 +25,11 @@ body::before {
     height:100%;
 
     background: url("doriangray.jpg") center/cover no-repeat;
-    opacity: 0.25;   /* 👈 transparency of image */
+    opacity: 0.5;   /*  transparency of image */
     z-index: -1;
 }
 
-/* =========================
-   NAVIGATION (always visible)
-========================= */
+/* navigation (always visible)*/
 
 nav{
     position: relative;
@@ -54,9 +50,7 @@ nav a:hover{
     text-decoration:underline;
 }
 
-/* =========================
-   MAIN CONTENT
-========================= */
+/*  */
 
 .container{
     max-width:900px;
@@ -68,9 +62,7 @@ nav a:hover{
     z-index: 2;
 }
 
-/* =========================
-   SPLASH HERO (homepage intro)
-========================= */
+/* Homepage intro */
 
 #splash {
     position: relative;
@@ -97,9 +89,7 @@ nav a:hover{
     }
 }
 
-/* =========================
-   TEXT STYLES
-========================= */
+/* text*/
 
 h1,h2,h3{
     color:#5a2d82;
@@ -130,7 +120,7 @@ footer{
 
 <body>
 
-<!-- NAVIGATION -->
+<!-- navigation -->
 <nav>
     <a href="index.html">Home</a>
     <a href="text.html">Text</a>
@@ -155,13 +145,6 @@ footer{
         <li>Explore recurring imagery dynamically</li>
     </ul>
 
-</div>
-
-<!-- MAIN CONTENT -->
-<div class="container">
-
-<div class="quote">
-"The only way to get rid of temptation is to yield to it."
 </div>
 
 </div>
