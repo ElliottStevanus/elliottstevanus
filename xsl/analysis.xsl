@@ -21,15 +21,9 @@
 
 <h2>Analysis View</h2>
 
-<!-- ========================= -->
-<!-- SVG BAR CHART -->
-<!-- ========================= -->
-
 <svg width="600" height="300" xmlns="http://www.w3.org/2000/svg">
 
-    <!-- ========================= -->
-    <!-- SIMILE SUBTYPES -->
-    <!-- ========================= -->
+    <!-- Simile subtype -->
 
     <!-- as_as -->
     <text x="40" y="40">as_as</text>
@@ -52,9 +46,7 @@
           height="15"
           fill="steelblue"/>
 
-    <!-- ========================= -->
-    <!-- METAPHOR SUBTYPES -->
-    <!-- ========================= -->
+    <!-- Metapbot subtypes -->
 
     <!-- is_a -->
     <text x="40" y="170">is_a</text>
