@@ -33,4 +33,3 @@
 </xsl:template>
 
 </xsl:stylesheet>
-<!-- End of the XSLT stylesheet -->
