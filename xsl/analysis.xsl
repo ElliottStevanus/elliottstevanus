@@ -14,19 +14,68 @@
 
 <h2>Analysis View</h2>
 
-<xsl:for-each select="//metaphor | //simile">
-    <!-- Loop through all <metaphor> and <simile> elements
-         anywhere in the XML document. -->
+<xsl:template match="/">
 
-    <div class="analysis-item">
-        <!-- For applying CSS highlights to the metaphors and similes. -->
+<html>
+<body>
 
-        <xsl:value-of select="."/>
-        <!-- makes the text show up from what is tagged with metaphor/simile -->
+<h2>Analysis View</h2>
 
-    </div>
+<!-- ========================= -->
+<!-- SVG BAR CHART -->
+<!-- ========================= -->
 
-</xsl:for-each>
+<svg width="600" height="300" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- ========================= -->
+    <!-- SIMILE SUBTYPES -->
+    <!-- ========================= -->
+
+    <!-- as_as -->
+    <text x="40" y="40">as_as</text>
+    <rect x="120" y="25"
+          width="{count(//simile[@subtype='simile_general']) * 10}"
+          height="15"
+          fill="steelblue"/>
+
+    <!-- like_the -->
+    <text x="40" y="80">like_the</text>
+    <rect x="120" y="65"
+          width="{count(//simile[@subtype='simile_general']) * 10}"
+          height="15"
+          fill="steelblue"/>
+
+    <!-- as_if -->
+    <text x="40" y="120">as_if</text>
+    <rect x="120" y="105"
+          width="{count(//simile[@subtype='simile_general']) * 10}"
+          height="15"
+          fill="steelblue"/>
+
+    <!-- ========================= -->
+    <!-- METAPHOR SUBTYPES -->
+    <!-- ========================= -->
+
+    <!-- is_a -->
+    <text x="40" y="170">is_a</text>
+    <rect x="120" y="155"
+          width="{count(//metaphor[@subtype='metaphor_is_a']) * 10}"
+          height="15"
+          fill="tomato"/>
+
+    <!-- becomes -->
+    <text x="40" y="210">becomes</text>
+    <rect x="120" y="195"
+          width="{count(//metaphor[@subtype='metaphor_becomes']) * 10}"
+          height="15"
+          fill="tomato"/>
+
+</svg>
+
+</body>
+</html>
+
+</xsl:template>
 
 </body>
 </html>
