@@ -5,7 +5,6 @@
 <xsl:output method="html"/>
 
 <xsl:template match="/">
-
 <html>
 <body>
 
@@ -14,9 +13,14 @@
 <xsl:for-each select="//metaphor">
 
     <div class="metaphor-item">
+        <!-- wrap for styling -->
 
         <strong>
+            <!-- bold, this is ugly though change it later. -->
+
             <xsl:value-of select="normalize-space(.)"/>
+            <!-- Collapses space between the metaphors-->
+
         </strong>
 
     </div>
@@ -29,3 +33,4 @@
 </xsl:template>
 
 </xsl:stylesheet>
+<!-- End of stylesheet -->
