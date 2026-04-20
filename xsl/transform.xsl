@@ -13,8 +13,12 @@
 <html>
 <head>
 
-<!-- JS CONNECTION -->
-<script src="app.js"></script>
+<title>Dorian Gray Text</title>
+
+<link rel="stylesheet" href="css/style.css"/>
+
+<!-- JS APP LAYER -->
+<script src="js/app.js"></script>
 
 <style>
 
@@ -22,11 +26,40 @@ body {
     background: #f4f1ea;
     font-family: Georgia, serif;
     margin: 0;
-    padding: 40px 0;
+    padding: 0;
 }
 
+/* NAV */
+nav {
+    display: flex;
+    gap: 15px;
+    padding: 15px 25px;
+    background: #222;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+/* LAYOUT */
+#app {
+    padding: 20px;
+}
+
+/* CONTROLS */
+#controls {
+    margin: 20px 0;
+}
+
+button {
+    margin-right: 10px;
+    padding: 8px 12px;
+}
+
+/* READING VIEW */
 .reading-container {
-    max-width: 720px;
+    max-width: 750px;
     margin: 0 auto;
     background: white;
     padding: 40px 50px;
@@ -40,8 +73,7 @@ p {
     text-indent: 1.5em;
 }
 
-/* FIGURATIVE LANGUAGE STYLES */
-
+/* FIGURATIVE LANGUAGE */
 .metaphor {
     background: rgba(255, 200, 0, 0.35);
     padding: 2px 4px;
@@ -63,16 +95,93 @@ p {
     cursor: pointer;
 }
 
+/* VIEW PANELS */
+.view {
+    display: none;
+}
+
+.view.active {
+    display: block;
+}
+
 </style>
 
 </head>
 
 <body>
 
-<div class="reading-container">
+<!-- ========================= -->
+<!-- NAV (replaces text.html) -->
+<!-- ========================= -->
 
-    <!-- SIMPLE PARAGRAPH OUTPUT -->
-    <xsl:apply-templates select="//paragraph"/>
+<nav>
+    <a href="#">Home</a>
+    <a href="#">Text</a>
+    <a href="#">Project</a>
+</nav>
+
+<!-- ========================= -->
+<!-- MAIN APP WRAPPER -->
+<!-- ========================= -->
+
+<div id="app">
+
+    <!-- ========================= -->
+    <!-- VIEW CONTROLS -->
+    <!-- ========================= -->
+
+    <div id="controls">
+        <button id="view-reading">Reading</button>
+        <button id="view-metaphor">Metaphor View</button>
+        <button id="view-analysis">Analysis</button>
+    </div>
+
+    <!-- ========================= -->
+    <!-- ANALYSIS PANEL (JS-POWERED) -->
+    <!-- ========================= -->
+
+    <div id="analysis-panel">
+        <input type="text" id="figure-search" placeholder="Search metaphors..."/>
+        <ul id="search-results"></ul>
+    </div>
+
+    <!-- ========================= -->
+    <!-- READING VIEW -->
+    <!-- ========================= -->
+
+    <div id="reading-view" class="view active">
+
+        <div class="reading-container">
+
+            <xsl:apply-templates select="//paragraph"/>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- ANALYSIS VIEW -->
+    <!-- ========================= -->
+
+    <div id="analysis-view" class="view">
+        <h2>Analysis View</h2>
+
+        <div id="analysis-sentence"></div>
+
+        <div id="word-panel"></div>
+
+        <div id="graph-container"></div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- METAPHOR VIEW -->
+    <!-- ========================= -->
+
+    <div id="metaphor-view" class="view">
+        <h2>Metaphor Connections</h2>
+
+        <div id="metaphor-results"></div>
+    </div>
 
 </div>
 
@@ -112,7 +221,7 @@ p {
 </xsl:template>
 
 <!-- ========================= -->
-<!-- TEXT NODE -->
+<!-- TEXT -->
 <!-- ========================= -->
 
 <xsl:template match="text()">
