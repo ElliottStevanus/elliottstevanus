@@ -35,11 +35,12 @@ function cacheDocument() {
 
 /* =========================
    TOKENIZER
-========================= */
+========================= */ 
 function tokenize(text) {
 
   const stopwords = new Set([
-    "the","and","is","in","of","a","to","but","with","for","on","into"
+    "the","and","is","in","of","a","to","but","with","for","on","into",
+    "that","it","can","was","if","my","there","as","i","or","this","have","had","been","are","were","be","by","at","an","so","do","does","did","not"
   ]);
 
   return text
@@ -49,6 +50,7 @@ function tokenize(text) {
     .filter(w => w && !stopwords.has(w));
 
 }
+
 
 
 /* =========================
