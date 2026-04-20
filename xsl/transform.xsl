@@ -110,35 +110,19 @@ p {
 
 <body>
 
-<!-- ========================= -->
-<!-- NAV (replaces text.html) -->
-<!-- ========================= -->
-
 <nav>
     <a href="#">Home</a>
     <a href="#">Text</a>
     <a href="#">Project</a>
 </nav>
 
-<!-- ========================= -->
-<!-- MAIN APP WRAPPER -->
-<!-- ========================= -->
-
 <div id="app">
-
-    <!-- ========================= -->
-    <!-- VIEW CONTROLS -->
-    <!-- ========================= -->
 
     <div id="controls">
         <button id="view-reading">Reading</button>
         <button id="view-metaphor">Metaphor View</button>
         <button id="view-analysis">Analysis</button>
     </div>
-
-    <!-- ========================= -->
-    <!-- ANALYSIS PANEL (JS-POWERED) -->
-    <!-- ========================= -->
 
     <div id="analysis-panel">
         <input type="text" id="figure-search" placeholder="Search metaphors..."/>
@@ -159,27 +143,18 @@ p {
 
     </div>
 
-    <!-- ========================= -->
     <!-- ANALYSIS VIEW -->
-    <!-- ========================= -->
-
     <div id="analysis-view" class="view">
         <h2>Analysis View</h2>
 
         <div id="analysis-sentence"></div>
-
         <div id="word-panel"></div>
-
         <div id="graph-container"></div>
     </div>
 
-    <!-- ========================= -->
     <!-- METAPHOR VIEW -->
-    <!-- ========================= -->
-
     <div id="metaphor-view" class="view">
         <h2>Metaphor Connections</h2>
-
         <div id="metaphor-results"></div>
     </div>
 
@@ -191,12 +166,12 @@ p {
 </xsl:template>
 
 <!-- ========================= -->
-<!-- PARAGRAPH TEMPLATE -->
+<!-- PARAGRAPHS (FIXED ID SYSTEM) -->
 <!-- ========================= -->
 
 <xsl:template match="paragraph">
 
-<p id="{generate-id()}">
+<p id="p-{count(preceding::paragraph) + 1}">
 
     <xsl:apply-templates/>
 
@@ -205,14 +180,14 @@ p {
 </xsl:template>
 
 <!-- ========================= -->
-<!-- FIGURATIVE LANGUAGE -->
+<!-- FIGURATIVE LANGUAGE (FIXED LINKS) -->
 <!-- ========================= -->
 
 <xsl:template match="metaphor | simile | aphorism">
 
 <span class="{name()}"
       data-type="{name()}"
-      data-sentence="{generate-id(..)}">
+      data-sentence="p-{count(ancestor::paragraph/preceding::paragraph) + 1}">
 
     <xsl:apply-templates/>
 
