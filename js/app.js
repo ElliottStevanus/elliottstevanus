@@ -218,16 +218,16 @@ function renderGraph(word) {
 
   const svg = document.createElementNS(svgNS, "svg");
 
-const barSpacing = 100;
-const baseOffset = 50;
-const width = baseOffset + entries.length * barSpacing;
-
-svg.setAttribute("width", width);
-  svg.setAttribute("height", "300");
-
   const entries = Object.entries(data)
     .sort((a,b) => b[1]-a[1])
     .slice(0, 10);
+
+  const barSpacing = 100;
+  const baseOffset = 50;
+  const width = baseOffset + entries.length * barSpacing;
+
+  svg.setAttribute("width", width);
+  svg.setAttribute("height", "300");
 
   entries.forEach(([w, count], i) => {
 
@@ -238,27 +238,22 @@ svg.setAttribute("width", width);
     rect.setAttribute("height", count * 20);
 
     rect.addEventListener("click", () => {
-
       openMetaphorView(word, w);
-
     });
 
     svg.appendChild(rect);
 
     const label = document.createElementNS(svgNS, "text");
-
     label.setAttribute("x", 50 + i * 100);
     label.setAttribute("y", 270);
- label.textContent = w;
+    label.textContent = w;
+
     svg.appendChild(label);
   });
 
   const container = document.getElementById("graph-container");
-
   container.innerHTML = "";
-
   container.appendChild(svg);
-
 }
 
 
