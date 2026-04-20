@@ -205,8 +205,7 @@ function renderGraph(word) {
   entries.forEach(([w, count], i) => {
 
     const rect = document.createElementNS(svgNS, "rect");
-
-    rect.setAttribute("x", 50 + i * 50);
+    rect.setAttribute("x", 50 + i * 100);
     rect.setAttribute("y", 250 - count * 20);
     rect.setAttribute("width", 20);
     rect.setAttribute("height", count * 20);
@@ -221,10 +220,9 @@ function renderGraph(word) {
 
     const label = document.createElementNS(svgNS, "text");
 
-    label.setAttribute("x", 50 + i * 50);
+    label.setAttribute("x", 50 + i * 100);
     label.setAttribute("y", 270);
-    label.textContent = w;
-
+  label.setAttribute("text-anchor", "middle"); 
     svg.appendChild(label);
 
   });
