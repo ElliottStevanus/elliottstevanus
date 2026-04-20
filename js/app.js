@@ -39,7 +39,7 @@ function cacheDocument() {
 function tokenize(text) {
 
   const stopwords = new Set([
-    "the","and","is","in","of","a","to","but","with","for","on","into","he","who","those","him",
+    "the","and","is","in","of","a","to","but","with","for","on","into","he","who","those","him","her","when","his","them","here","they","all","you","has","only",
     "that","it","can","was","if","my","there","as","i","or","this","have","had","been","are","were","be","by","at","an","so","do","does","did","not"
   ]);
 
