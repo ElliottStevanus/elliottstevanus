@@ -26,6 +26,7 @@ function cacheDocument() {
 
   App.graphCache = Array.from(items).map(el => ({
     el,
+    type: el.classList[0], // <-- ADD THIS
     sentenceId: el.dataset.sentence,
     words: tokenize(el.textContent)
   }));
@@ -169,11 +170,22 @@ function computeCooccurrence(word) {
 
     if (entry.words.includes(word)) {
 
-      entry.words.forEach(w => {
+      // avoid double-counting same word in same sentence
+      const uniqueWords = new Set(entry.words);
 
-        if (w !== word) {
-          counts[w] = (counts[w] || 0) + 1;
+      uniqueWords.forEach(w => {
+
+        if (w === word) return;
+
+        if (!counts[w]) {
+          counts[w] = {
+            total: 0,
+            types: new Set()
+          };
         }
+
+        counts[w].total += 1;
+        counts[w].types.add(entry.type);
 
       });
 
@@ -181,11 +193,20 @@ function computeCooccurrence(word) {
 
   });
 
-  return counts;
+  // convert into sortable scores
+  const result = {};
+
+  Object.entries(counts).forEach(([w, data]) => {
+
+    const typeBonus = data.types.size * 2; // <-- tweak this (2 = moderate boost)
+
+    result[w] = data.total + typeBonus;
+
+  });
+
+  return result;
 
 }
-
-
 /* =========================
    SVG GRAPH
 ========================= */
