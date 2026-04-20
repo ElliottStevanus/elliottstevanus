@@ -218,7 +218,11 @@ function renderGraph(word) {
 
   const svg = document.createElementNS(svgNS, "svg");
 
-  svg.setAttribute("width", "600");
+const barSpacing = 100;
+const baseOffset = 50;
+const width = baseOffset + entries.length * barSpacing;
+
+svg.setAttribute("width", width);
   svg.setAttribute("height", "300");
 
   const entries = Object.entries(data)
