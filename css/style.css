@@ -17,14 +17,23 @@ nav a {
 }
 
 /* FIGURATIVE LANGUAGE */
-.simile {
-    border-bottom: 2px solid #2a6df4;
-    cursor: pointer;
+metaphor {
+  background: rgba(255, 200, 0, 0.35);
+  padding: 2px 4px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.metaphor {
-    background: #ffd6d6;
-    padding: 2px 4px;
-    border-radius: 3px;
-    cursor: pointer;
+simile {
+  background: rgba(100, 160, 255, 0.35);
+  padding: 2px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+aphorism {
+  background: rgba(180, 255, 180, 0.35);
+  padding: 2px 4px;
+  border-radius: 4px;
+  cursor: pointer;
 }
