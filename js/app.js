@@ -182,27 +182,28 @@ function computeCooccurrence(word) {
 
   App.graphCache.forEach(entry => {
 
-    if (entry.words.includes(word)) {
+    if (!entry.words.includes(word)) return;
 
-      const uniqueWords = new Set(entry.words);
+    // IMPORTANT: avoid self-reinforcing within same sentence
+    const coWords = entry.words.filter(w => w !== word);
 
-      uniqueWords.forEach(w => {
+    const uniqueCoWords = new Set(coWords);
 
-        if (w === word) return;
+    uniqueCoWords.forEach(w => {
 
-        if (!counts[w]) {
-          counts[w] = {
-            total: 0,
-            types: new Set()
-          };
-        }
+      if (!counts[w]) {
+        counts[w] = {
+          total: 0,
+          types: new Set()
+        };
+      }
 
-        counts[w].total += 1;
-        counts[w].types.add(entry.type);
+      // COUNT ONLY ONCE PER SENTENCE
+      counts[w].total += 1;
 
-      });
+      counts[w].types.add(entry.type);
 
-    }
+    });
 
   });
 
@@ -211,13 +212,11 @@ function computeCooccurrence(word) {
   Object.entries(counts).forEach(([w, data]) => {
 
     const typeBonus = data.types.size * 2;
-
     result[w] = data.total + typeBonus;
 
   });
 
   return result;
-
 }
 
 /* =========================
