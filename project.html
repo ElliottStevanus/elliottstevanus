@@ -124,15 +124,22 @@
     <h2>Methodologies</h2>
 
     <p>
-        The workflow begins with the source XML, which contains the raw text segmented into &lt;paragraph&gt; elements. This file is loaded into script.js, which, and passed into annotator.js. The annotator uses regex to find similes and metaphors (or something close to them). Importantly, when those matches with the regex are made, they are expanded into short clauses and wrapped in semantic tags such as &lt;simile&gt; and &lt;metaphor&gt;, so a little context is later visible in the search engine. The output is a newly constructed annotated XML string, which is then parsed back into a DOM object (annotatedDoc). This method was used to create the metaphor tags rather than marking up the xml file directly as this code could theoretically apply to any xml file, so if the site is expanded to allow users to input their own text, it would be able to help them search for metaphors in it.
+        The process began with a close reading of The Picture of Dorian Gray, marking metaphors, similes, and aphorisms as I read. These sorts of figurative language
+        where chosen because of their relationship with identity formation (aphorism) and identity transformation (metaphor, simile). After this was done XSLT was used
+        to transform the XML into a structured HTML webpage that the browser can display and JavaScript can interact with. It converts each paragraph into a numbered p element
+        with a unique ID, and converts metaphor, simile, and aphorism nodes into HTML elements that preserve their tag names while adding data-type and data-sentence attributes
+        so they can be styled with CSS and located by JavaScript. It also creates the overall page layout (reading, analysis, and metaphor views) so the JS can later switch 
+        between panels and build interactive features on top of the static document.
     </p>
-
     <p>
-        The actual core of the website, where the interaction happens, comes from within script.js, which loads an XSL stylesheet, applies it to the annotated XML, and injects the resulting HTML into the page. There are three different XSL files, one per view point in the text page of the website, but they all look at the same underlying data. Reading view groups sentence-level paragraphs into larger blocks and uses template rules to convert &lt;metaphor&gt; and &lt;simile&gt; elements into styled HTML spans, preserving their semantic meaning visually by highlighting them.
-    </p>
-
-    <p>
-        Finally, ui.js provides the interaction layer, connecting user input to the annotated document. It queries the annotatedDoc (the database created by parsing the text into a DOM object), based on user inputs in a search bar. The two other views/xsl stylesheets, metaphor view and analysis view, show only the text tagged as metaphor (in the case of metaphor view) and only the sections of the novel which contain words related to the users search (analysis view, still under construction). Generally: script.js orchestrates loading and transformation, annotator.js marks up the text to create metaphor/simile tags, and ui.js enables the user interface.
+    The JavaScript runs off of the HTML and builds two internal data structures: one that indexes all figurative language nodes (metaphor, simile, aphorism) 
+    and another that indexes all paragraphs as “sentences” with tokenized word lists. This was done so the user can find co-occurences of words in their transformation phase 
+    as well as when they show up as re-iffied plain text. When the user clicks on one of the highlighted bits of figurartive language, they are taken 
+    into an analysis view, there the sentence is rendered as a series of individual clickable words. When a word is clicked a co-occurrence graph is generated from the 
+    cached figurated nodes, with the 10 most co-occuring words having a bar the user can click on. From there, clicking a graph bar takes the user to a filtered view of the text
+    that shows all sentences where two selected words co-occur, using the cached sentence data to render results. Metaphor, Simile, and Aphorism are highlighted and sentences are
+    displayed in the order they appear, so users can see how a concept transforms over the text. Each sentence is clickable and will take the user back to the reading view at the
+    point in the text where the sentence they clicked on appears, allowing them too search for relevant language that appears closely to the transformed concept, and is likely related.
     </p>
 
   
