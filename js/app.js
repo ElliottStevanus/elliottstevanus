@@ -1,305 +1,337 @@
 const App = {
-  graphCache: null,
-  activeWord: null
+graphCache: null,
+sentenceCache: null, // NEW
+activeWord: null
 };
 
 /* =========================
-   INIT
+INIT
 ========================= */
 document.addEventListener("DOMContentLoaded", () => {
 
-  cacheDocument();
+cacheDocument();
+cacheSentences(); // NEW
 
-  initViewButtons();
-
-  initMetaphorClicks();
+initViewButtons();
+initMetaphorClicks();
 
 });
 
-
 /* =========================
-   CACHE TEXT STRUCTURE (IMPORTANT)
+CACHE FIGURATIVE LANGUAGE (UNCHANGED)
 ========================= */
 function cacheDocument() {
 
-  const items = document.querySelectorAll('.metaphor, .simile, .aphorism');
+const items = document.querySelectorAll('.metaphor, .simile, .aphorism');
 
-  App.graphCache = Array.from(items).map(el => ({
-    el,
-    type: el.classList[0], // <-- ADD THIS
-    sentenceId: el.dataset.sentence,
-    words: tokenize(el.textContent)
-  }));
+App.graphCache = Array.from(items).map(el => ({
+el,
+type: el.classList[0],
+sentenceId: el.dataset.sentence,
+words: tokenize(el.textContent)
+}));
 
 }
 
+/* =========================
+CACHE ALL SENTENCES (NEW)
+========================= */
+function cacheSentences() {
+
+const sentences = document.querySelectorAll('p');
+
+App.sentenceCache = Array.from(sentences).map(p => {
+
+```
+const words = tokenize(p.textContent);
+
+const hasFigurative = !!p.querySelector('.metaphor, .simile, .aphorism');
+
+return {
+  el: p,
+  words,
+  hasFigurative
+};
+```
+
+});
+
+}
 
 /* =========================
-   TOKENIZER
-========================= */ 
+TOKENIZER
+========================= */
 function tokenize(text) {
 
-  const stopwords = new Set([
-    "the","and","is","in","of","a","to","but","with","for","on","into","he","who","those","him","her","when","his","them","here","they","all","you","has","only",
-    "that","it","can","was","if","my","there","as","i","or","this","have","had","been","are","were","be","by","at","an","so","do","does","did","not"
-  ]);
+const stopwords = new Set([
+"the","and","is","in","of","a","to","but","with","for","on","into","he","who","those","him","her","when","his","them","here","they","all","you","has","only",
+"that","it","can","was","if","my","there","as","i","or","this","have","had","been","are","were","be","by","at","an","so","do","does","did","not"
+]);
 
-  return text
-    .toLowerCase()
-    .replace(/[^a-z\s]/g, '')
-    .split(/\s+/)
-    .filter(w => w && !stopwords.has(w));
+return text
+.toLowerCase()
+.replace(/[^a-z\s]/g, '')
+.split(/\s+/)
+.filter(w => w && !stopwords.has(w));
 
 }
 
-
-
 /* =========================
-   VIEW SWITCHING
+VIEW SWITCHING
 ========================= */
 function showView(viewId) {
 
-  document.querySelectorAll('.view')
-    .forEach(v => v.classList.remove('active'));
+document.querySelectorAll('.view')
+.forEach(v => v.classList.remove('active'));
 
-  document.getElementById(viewId)
-    .classList.add('active');
+document.getElementById(viewId)
+.classList.add('active');
 
 }
 
-
 /* =========================
-   VIEW BUTTONS
+VIEW BUTTONS
 ========================= */
 function initViewButtons() {
 
-  document.getElementById("view-reading")
-    .addEventListener("click", () => showView("reading-view"));
+document.getElementById("view-reading")
+.addEventListener("click", () => showView("reading-view"));
 
-  document.getElementById("view-analysis")
-    .addEventListener("click", () => showView("analysis-view"));
+document.getElementById("view-analysis")
+.addEventListener("click", () => showView("analysis-view"));
 
-  document.getElementById("view-metaphor")
-    .addEventListener("click", () => showView("metaphor-view"));
+document.getElementById("view-metaphor")
+.addEventListener("click", () => showView("metaphor-view"));
 
 }
 
-
 /* =========================
-   METAPHOR CLICK → ANALYSIS
+METAPHOR CLICK → ANALYSIS
 ========================= */
 function initMetaphorClicks() {
 
-  document.querySelectorAll('.metaphor, .simile, .aphorism')
-    .forEach(el => {
+document.querySelectorAll('.metaphor, .simile, .aphorism')
+.forEach(el => {
 
-      el.addEventListener("click", () => {
+```
+  el.addEventListener("click", () => {
 
-        openAnalysis(el);
+    openAnalysis(el);
 
-      });
+  });
 
-    });
+});
+```
 
 }
-
 
 function openAnalysis(el) {
 
-  const sentenceId = el.dataset.sentence;
+const sentenceId = el.dataset.sentence;
 
-  const paragraph = document.getElementById(sentenceId);
+const paragraph = document.getElementById(sentenceId);
 
-  if (!paragraph) return;
+if (!paragraph) return;
 
-  // switch view
-  showView("analysis-view");
+showView("analysis-view");
 
-  // inject sentence
-  document.getElementById("analysis-sentence")
-    .textContent = paragraph.textContent;
+document.getElementById("analysis-sentence")
+.textContent = paragraph.textContent;
 
-  // build word panel
-  buildWordPanel(paragraph.textContent);
+buildWordPanel(paragraph.textContent);
 
-  // scroll into view
-  paragraph.scrollIntoView({ behavior: "smooth", block: "center" });
+paragraph.scrollIntoView({ behavior: "smooth", block: "center" });
 
 }
 
-
 /* =========================
-   WORD PANEL
+WORD PANEL
 ========================= */
 function buildWordPanel(text) {
 
-  const words = tokenize(text);
+const words = tokenize(text);
 
-  const panel = document.getElementById("word-panel");
+const panel = document.getElementById("word-panel");
 
-  panel.innerHTML = "";
+panel.innerHTML = "";
 
-  words.forEach(word => {
+words.forEach(word => {
 
-    const btn = document.createElement("button");
-    btn.textContent = word;
+```
+const btn = document.createElement("button");
+btn.textContent = word;
 
-    btn.addEventListener("click", () => {
+btn.addEventListener("click", () => {
 
-      App.activeWord = word;
+  App.activeWord = word;
 
-      renderGraph(word);
+  renderGraph(word);
 
-    });
+});
 
-    panel.appendChild(btn);
+panel.appendChild(btn);
+```
 
-  });
+});
 
 }
 
-
 /* =========================
-   CO-OCCURRENCE GRAPH
+CO-OCCURRENCE GRAPH (UNCHANGED)
 ========================= */
 function computeCooccurrence(word) {
 
-  const counts = {};
+const counts = {};
 
-  App.graphCache.forEach(entry => {
+App.graphCache.forEach(entry => {
 
-    if (entry.words.includes(word)) {
+```
+if (entry.words.includes(word)) {
 
-      // avoid double-counting same word in same sentence
-      const uniqueWords = new Set(entry.words);
+  const uniqueWords = new Set(entry.words);
 
-      uniqueWords.forEach(w => {
+  uniqueWords.forEach(w => {
 
-        if (w === word) return;
+    if (w === word) return;
 
-        if (!counts[w]) {
-          counts[w] = {
-            total: 0,
-            types: new Set()
-          };
-        }
-
-        counts[w].total += 1;
-        counts[w].types.add(entry.type);
-
-      });
-
+    if (!counts[w]) {
+      counts[w] = {
+        total: 0,
+        types: new Set()
+      };
     }
 
-  });
-
-  // convert into sortable scores
-  const result = {};
-
-  Object.entries(counts).forEach(([w, data]) => {
-
-    const typeBonus = data.types.size * 2; // <-- tweak this (2 = moderate boost)
-
-    result[w] = data.total + typeBonus;
+    counts[w].total += 1;
+    counts[w].types.add(entry.type);
 
   });
-
-  return result;
 
 }
+```
+
+});
+
+const result = {};
+
+Object.entries(counts).forEach(([w, data]) => {
+
+```
+const typeBonus = data.types.size * 2;
+
+result[w] = data.total + typeBonus;
+```
+
+});
+
+return result;
+
+}
+
 /* =========================
-   SVG GRAPH
+SVG GRAPH
 ========================= */
 function renderGraph(word) {
 
-  const data = computeCooccurrence(word);
+const data = computeCooccurrence(word);
 
-  const svgNS = "http://www.w3.org/2000/svg";
+const svgNS = "http://www.w3.org/2000/svg";
 
-  const svg = document.createElementNS(svgNS, "svg");
+const svg = document.createElementNS(svgNS, "svg");
 
-  const entries = Object.entries(data)
-    .sort((a,b) => b[1]-a[1])
-    .slice(0, 10);
+const entries = Object.entries(data)
+.sort((a,b) => b[1]-a[1])
+.slice(0, 10);
 
-  const barSpacing = 100;
-  const baseOffset = 50;
-  const width = baseOffset + entries.length * barSpacing;
+const barSpacing = 100;
+const baseOffset = 50;
+const width = baseOffset + entries.length * barSpacing;
 
-  svg.setAttribute("width", width);
-  svg.setAttribute("height", "300");
+svg.setAttribute("width", width);
+svg.setAttribute("height", "300");
 
-  entries.forEach(([w, count], i) => {
+entries.forEach(([w, count], i) => {
 
-    const rect = document.createElementNS(svgNS, "rect");
-    rect.setAttribute("x", 50 + i * 100);
-    rect.setAttribute("y", 250 - count * 20);
-    rect.setAttribute("width", 20);
-    rect.setAttribute("height", count * 20);
+```
+const rect = document.createElementNS(svgNS, "rect");
+rect.setAttribute("x", 50 + i * 100);
+rect.setAttribute("y", 250 - count * 20);
+rect.setAttribute("width", 20);
+rect.setAttribute("height", count * 20);
 
-    rect.addEventListener("click", () => {
-      openMetaphorView(word, w);
-    });
+rect.addEventListener("click", () => {
+  openMetaphorView(word, w);
+});
 
-    svg.appendChild(rect);
+svg.appendChild(rect);
 
-    const label = document.createElementNS(svgNS, "text");
-    label.setAttribute("x", 50 + i * 100);
-    label.setAttribute("y", 270);
-    label.textContent = w;
+const label = document.createElementNS(svgNS, "text");
+label.setAttribute("x", 50 + i * 100);
+label.setAttribute("y", 270);
+label.textContent = w;
 
-    svg.appendChild(label);
-  });
+svg.appendChild(label);
+```
 
-  const container = document.getElementById("graph-container");
-  container.innerHTML = "";
-  container.appendChild(svg);
+});
+
+const container = document.getElementById("graph-container");
+container.innerHTML = "";
+container.appendChild(svg);
 }
 
-
 /* =========================
-   METAPHOR VIEW FILTER
+EXPANDED RESULT VIEW (UPDATED)
 ========================= */
 function openMetaphorView(wordA, wordB) {
 
-  showView("metaphor-view");
+showView("metaphor-view");
 
-  const results = App.graphCache.filter(entry =>
-    entry.words.includes(wordA) &&
-    entry.words.includes(wordB)
-  );
+const results = App.sentenceCache.filter(entry =>
+entry.words.includes(wordA) &&
+entry.words.includes(wordB)
+);
 
-  const container = document.getElementById("metaphor-results");
+const container = document.getElementById("metaphor-results");
 
-  container.innerHTML = "";
+container.innerHTML = "";
 
-  results.forEach(r => {
+results.forEach(entry => {
 
-    const div = document.createElement("div");
+```
+const div = document.createElement("div");
 
-    div.textContent = r.el.textContent;
+// preserve figurative highlighting
+div.innerHTML = entry.el.innerHTML;
 
-    div.style.cursor = "pointer";
-    div.style.marginBottom = "10px";
+div.style.cursor = "pointer";
+div.style.marginBottom = "12px";
+div.style.padding = "8px";
 
-    div.addEventListener("click", () => {
+// VISUAL DISTINCTION
+if (entry.hasFigurative) {
+  div.style.borderLeft = "4px solid gold";
+  div.style.background = "rgba(255, 215, 0, 0.08)";
+}
 
-      const el = document.getElementById(r.sentenceId);
+div.addEventListener("click", () => {
 
-      if (el) {
+  const el = entry.el;
 
-        showView("reading-view");
+  if (el) {
 
-        el.scrollIntoView({ behavior: "smooth", block: "center" });
+    showView("reading-view");
 
-        el.style.background = "yellow";
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
 
-      }
+    el.style.background = "yellow";
 
-    });
+  }
 
-    container.appendChild(div);
+});
 
-  });
+container.appendChild(div);
+```
+
+});
 
 }
