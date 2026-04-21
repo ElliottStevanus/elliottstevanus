@@ -17,21 +17,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+
 /* =========================
-CACHE FIGURATIVE LANGUAGE (UNCHANGED)
+CACHE FIGURATIVE LANGUAGE (NODE-BASED)
 ========================= */
 function cacheDocument() {
 
-  const items = document.querySelectorAll('.metaphor, .simile, .aphorism');
+  const items = document.querySelectorAll('metaphor, simile, aphorism');
 
   App.graphCache = Array.from(items).map(el => ({
     el,
-    type: el.classList[0],
+    type: el.tagName.toLowerCase(),   // IMPORTANT CHANGE
     sentenceId: el.dataset.sentence,
     words: tokenize(el.textContent)
   }));
 
 }
+
 
 /* =========================
 CACHE ALL SENTENCES
@@ -44,7 +46,9 @@ function cacheSentences() {
 
     const words = tokenize(p.textContent);
 
-    const hasFigurative = !!p.querySelector('.metaphor, .simile, .aphorism');
+    // NODE-BASED CHECK (NO CLASS QUERIES)
+    const hasFigurative =
+      p.querySelector('metaphor, simile, aphorism') !== null;
 
     return {
       el: p,
@@ -55,6 +59,7 @@ function cacheSentences() {
   });
 
 }
+
 
 /* =========================
 TOKENIZER
@@ -76,6 +81,7 @@ function tokenize(text) {
 
 }
 
+
 /* =========================
 VIEW SWITCHING
 ========================= */
@@ -88,6 +94,7 @@ function showView(viewId) {
     .classList.add('active');
 
 }
+
 
 /* =========================
 VIEW BUTTONS
@@ -105,12 +112,13 @@ function initViewButtons() {
 
 }
 
+
 /* =========================
-METAPHOR CLICK → ANALYSIS
+METAPHOR CLICK → ANALYSIS (NODE-BASED)
 ========================= */
 function initMetaphorClicks() {
 
-  document.querySelectorAll('.metaphor, .simile, .aphorism')
+  document.querySelectorAll('metaphor, simile, aphorism')
     .forEach(el => {
 
       el.addEventListener("click", () => {
@@ -120,6 +128,7 @@ function initMetaphorClicks() {
     });
 
 }
+
 
 /* =========================
 ANALYSIS VIEW
@@ -143,6 +152,7 @@ function openAnalysis(el) {
 
 }
 
+
 /* =========================
 WORD PANEL
 ========================= */
@@ -160,11 +170,8 @@ function buildWordPanel(text) {
     btn.textContent = word;
 
     btn.addEventListener("click", () => {
-
       App.activeWord = word;
-
       renderGraph(word);
-
     });
 
     panel.appendChild(btn);
@@ -172,6 +179,7 @@ function buildWordPanel(text) {
   });
 
 }
+
 
 /* =========================
 CO-OCCURRENCE GRAPH
@@ -184,9 +192,7 @@ function computeCooccurrence(word) {
 
     if (!entry.words.includes(word)) return;
 
-    // IMPORTANT: avoid self-reinforcing within same sentence
     const coWords = entry.words.filter(w => w !== word);
-
     const uniqueCoWords = new Set(coWords);
 
     uniqueCoWords.forEach(w => {
@@ -198,9 +204,7 @@ function computeCooccurrence(word) {
         };
       }
 
-      // COUNT ONLY ONCE PER SENTENCE
       counts[w].total += 1;
-
       counts[w].types.add(entry.type);
 
     });
@@ -210,14 +214,14 @@ function computeCooccurrence(word) {
   const result = {};
 
   Object.entries(counts).forEach(([w, data]) => {
-
     const typeBonus = data.types.size * 2;
     result[w] = data.total + typeBonus;
-
   });
 
   return result;
+
 }
+
 
 /* =========================
 GRAPH RENDERING
@@ -268,6 +272,7 @@ function renderGraph(word) {
   container.appendChild(svg);
 
 }
+
 
 /* =========================
 EXPANDED RESULT VIEW
