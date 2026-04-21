@@ -104,9 +104,9 @@ aphorism {
 <body>
 
 <nav>
-    <a href="#">Home</a>
-    <a href="#">Text</a>
-    <a href="#">Project</a>
+    <a href="index.html">Home</a>
+
+    <a href="project.html">Project</a>
 </nav>
     
 <!--3 panel interface shell-->
